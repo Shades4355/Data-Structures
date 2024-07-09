@@ -8,11 +8,11 @@
 // Date:        By:     Action:
 // -------------------------------
 // 2024-July-08 SM      Created file
-// 
+// 2024-July-09 SM      Added constructor
 
 
 public class Driver {
     public static void main(String[] args) {
-        System.out.println("Hello!");
+        System.out.println("Hello!"); // TODO: delete
     }
-}
+} // End Program
