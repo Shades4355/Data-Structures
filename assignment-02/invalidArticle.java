@@ -10,8 +10,8 @@
 // 2024-July-09 SM      Created file
 
 
-public class invalidArticle extends Exception {
+public class InvalidArticle extends Exception {
     // Constructor
-    invalidArticle(String message){ super(message); }
+    InvalidArticle(String message){ super(message); }
     
 } // end program

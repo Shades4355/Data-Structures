@@ -14,7 +14,7 @@
 public class Draft extends Article {
     // Constructors
     Draft(String fileType, String title, String author, 
-            String dateCreated, String lastChanged) throws invalidArticle {
+            String dateCreated, String lastChanged) throws InvalidArticle {
         super(fileType, title, author, dateCreated, lastChanged);
         setState("Draft");
     }

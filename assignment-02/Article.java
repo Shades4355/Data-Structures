@@ -19,7 +19,7 @@ public class Article {
 
     // Constructors
     Article(String fileType, String title, String author, 
-            String dateCreated, String lastChanged) throws invalidArticle {
+            String dateCreated, String lastChanged) throws InvalidArticle {
         setFileType(fileType);
         setTitle(title);
         setAuthor(author);
@@ -30,40 +30,40 @@ public class Article {
     // Accessors & Mutators
     // state
     public String getState() { return this.state; }
-    public void setState(String state) throws invalidArticle {
+    public void setState(String state) throws InvalidArticle {
         if (Arrays.asList("Investigation", "Draft", "Send to Press").contains(state)) {
             this.state = state;
         } else {
-            throw new invalidArticle("Invalid state");
+            throw new InvalidArticle("Invalid state");
         }
     }
     // fileType
     public String getFileType() { return fileType; }
-    public void setFileType(String fileType) throws invalidArticle {
+    public void setFileType(String fileType) throws InvalidArticle {
         // check if 
         if (Arrays.asList("PDF", "DOC", "DOCX", "GDOC").contains(fileType)) {
             this.fileType = fileType;
         } else {
-            throw new invalidArticle("Invalid file type");
+            throw new InvalidArticle("Invalid file type");
         }
         
     }
     // Title
     public String getTitle() { return this.title; }
-    public void setTitle(String title) throws invalidArticle {
+    public void setTitle(String title) throws InvalidArticle {
         if (title.length() <= 0) {
-            throw new invalidArticle("Invalid title");
+            throw new InvalidArticle("Invalid title");
         } else {
             this.title = title;
         }
     }
     // Author
     public String getAuthor() { return this.author; }
-    public void setAuthor(String author) throws invalidArticle {
+    public void setAuthor(String author) throws InvalidArticle {
         if (author.length() > 0) {
             this.author = author;
         } else {
-            throw new invalidArticle("Invalid author");
+            throw new InvalidArticle("Invalid author");
         }
     }
     // lastChanged
