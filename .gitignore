@@ -1,0 +1,7 @@
+# Java Compiled files
+*.class
+
+# Misc files
+*.pdf
+*.txt
+.DS_Store
