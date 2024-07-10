@@ -13,7 +13,7 @@
 
 import java.util.Arrays;
 
-public class Article {
+public abstract class Article {
     // Variables
     protected String state, fileType, title, author, lastChanged, dateCreated;
 
@@ -41,8 +41,8 @@ public class Article {
     public String getFileType() { return fileType; }
     public void setFileType(String fileType) throws InvalidArticle {
         // check if 
-        if (Arrays.asList("PDF", "DOC", "DOCX", "GDOC").contains(fileType)) {
-            this.fileType = fileType;
+        if (Arrays.asList("PDF", "DOC", "DOCX", "GDOC").contains(fileType.toUpperCase())) {
+            this.fileType = fileType.toUpperCase();
         } else {
             throw new InvalidArticle("Invalid file type");
         }
@@ -73,6 +73,5 @@ public class Article {
     }
     // dateCreated
     public String getDateCreated() { return this.dateCreated;}
-
 
 } // End Program
