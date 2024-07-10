@@ -2,7 +2,7 @@
 // Written by:  Shades Meyers
 // Description: Client-side program for organizing News Articles 
 // Challenges:  Sorting a list of Objects
-// Time Spent:  3 h 11 min + 
+// Time Spent:  3 h 26 min + 
 //
 // Revision history:
 // Date:        By:     Action:
@@ -167,33 +167,30 @@ public class Driver {
                     }
 
                     // If Article type is valid, create Article
-                    while (true) {
-                        try {
-                            if (answer.toLowerCase().equals("investigation")) {
-                                article = new Investigation(fileType, title, author, dateCreated, lastChanged);
-                            } else if (answer.toLowerCase().equals("draft")) {
-                                article = new Draft(fileType, title, author, dateCreated, lastChanged);
-                            } else {
-                                article = new SendToPress(fileType, title, author, dateCreated, lastChanged);
-                            }
-                        } catch (InvalidArticle e) {
-                            System.err.println(e);
-                            continue;
+                    try {
+                        if (answer.toLowerCase().equals("investigation")) {
+                            article = new Investigation(fileType, title, author, dateCreated, lastChanged);
+                        } else if (answer.toLowerCase().equals("draft")) {
+                            article = new Draft(fileType, title, author, dateCreated, lastChanged);
+                        } else {
+                            article = new SendToPress(fileType, title, author, dateCreated, lastChanged);
                         }
-                        break;
+                    } catch (InvalidArticle e) {
+                        System.err.println(e);
+                        continue;
                     }
 
                     // double check that article is defined
                     if (article != null) {
                         break;
                     }
-                }
+                } // end Create Article
 
                 // add Article to list
                 articleList.add(article);
 
                 // return to top to prompt for another Article entry
-            }
+            } // end Add Article to List
 
             // verify article(s) have been added to list
             if (articleList.size() <= 0) {
@@ -237,11 +234,11 @@ public class Driver {
             // If articles are in list, display list
             for (int i = 0; i < articleList.size(); i++) {
                 System.out.printf("%d.) ", i + 1);
-                System.out.println(articleList.get(i).getTitle());
-                System.out.println("     " + articleList.get(i).getAuthor() + " (" + articleList.get(i).getState() + ")");
-                System.out.println("     " + articleList.get(i).getDateCreated());
-                System.out.println("     " + articleList.get(i).getLastChanged());
-                System.out.println("     " + articleList.get(i).getFileType());
+                System.out.println(articleList.get(i).getTitle() + " (" + articleList.get(i).getState() + ")");
+                System.out.println("    By: " + articleList.get(i).getAuthor());
+                System.out.println("    Date Created: " + articleList.get(i).getDateCreated());
+                System.out.println("    Last Changed: " + articleList.get(i).getLastChanged());
+                System.out.println("    File Type: " + articleList.get(i).getFileType());
             }
             
             // prompt to restart program
@@ -256,7 +253,7 @@ public class Driver {
                 input.close();
                 System.exit(0);
             }
-        } // end core while loop
+        } // end core While loop
     } // end main
 
     public static boolean testArrayContents(String[] array, String searchFor) {
@@ -268,6 +265,7 @@ public class Driver {
         return false;
     } // end testArrayContents
 
+    // TODO: fix Sorter
     public static ArrayList<Article> articleSorter(String sortOption, ArrayList<Article> arr) {
         // variables
         ArrayList<Article> sortedArray;
