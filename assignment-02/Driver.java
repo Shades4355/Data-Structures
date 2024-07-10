@@ -254,6 +254,8 @@ public class Driver {
                 input.close();
                 System.exit(0);
             }
+            // TODO: ability to remove array from list
+            // TODO: ability to change Article from one state to another
         } // end core While loop
     } // end main
 
