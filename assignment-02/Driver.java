@@ -2,7 +2,7 @@
 // Written by:  Shades Meyers
 // Description: Client-side program for organizing News Articles 
 // Challenges:  Sorting a list of Objects
-// Time Spent:  3 h 26 min + 
+// Time Spent:  4 h 07 min + 
 //
 // Revision history:
 // Date:        By:     Action:
@@ -10,6 +10,7 @@
 // 2024-July-08 SM      Created file
 // 2024-July-09 SM      Added constructor
 //                      Started coding
+// 2024-July-10 SM      Con't coding
 
 
 import java.util.ArrayList;
@@ -229,7 +230,7 @@ public class Driver {
             }
 
             // sort articleList
-            articleList = articleSorter(sortOption, articleList);
+            articleSorter(sortOption, articleList);
             
             // If articles are in list, display list
             for (int i = 0; i < articleList.size(); i++) {
@@ -256,6 +257,7 @@ public class Driver {
         } // end core While loop
     } // end main
 
+    // test is a given String is in the given Array
     public static boolean testArrayContents(String[] array, String searchFor) {
         for (String element : array) {
             if (element.toLowerCase().equals(searchFor.toLowerCase())) {
@@ -266,29 +268,22 @@ public class Driver {
     } // end testArrayContents
 
     // TODO: fix Sorter
-    public static ArrayList<Article> articleSorter(String sortOption, ArrayList<Article> arr) {
-        // variables
-        ArrayList<Article> sortedArray;
+    public static void articleSorter(String sortOption, ArrayList<Article> arr) {
 
-        // copy arr to sortedArray
-        sortedArray = arr;
-
-        // sort sortedArray
+        // sort Array
         // sort options: state, file type, title, author, last changed, and date created
-        if (sortOption.toLowerCase() == "state") {
-            sortedArray.sort((obj1, obj2) -> obj1.getState().compareTo(obj2.getState()));
-        } else if (sortOption.toLowerCase() == "file type") {
-            sortedArray.sort((obj1, obj2) -> obj1.getFileType().compareTo(obj2.getFileType()));
-        } else if (sortOption.toLowerCase() == "title") {
-            sortedArray.sort((obj1, obj2) -> obj1.getTitle().compareTo(obj2.getTitle()));
-        } else if (sortOption.toLowerCase() == "author") {
-            sortedArray.sort((obj1, obj2) -> obj1.getAuthor().compareTo(obj2.getAuthor()));
-        } else if (sortOption.toLowerCase() == "last changed") {
-            sortedArray.sort((obj1, obj2) -> obj1.getLastChanged().compareTo(obj2.getLastChanged()));
+        if (sortOption.toLowerCase().equals("state")) {
+            arr.sort((obj1, obj2) -> obj1.getState().compareTo(obj2.getState()));
+        } else if (sortOption.toLowerCase().equals("file type")) {
+            arr.sort((obj1, obj2) -> obj1.getFileType().compareTo(obj2.getFileType()));
+        } else if (sortOption.toLowerCase().equals("title")) {
+            arr.sort((obj1, obj2) -> obj1.getTitle().compareTo(obj2.getTitle()));
+        } else if (sortOption.toLowerCase().equals("author")) {
+            arr.sort((obj1, obj2) -> obj1.getAuthor().compareTo(obj2.getAuthor()));
+        } else if (sortOption.toLowerCase().equals("last changed")) {
+            arr.sort((obj1, obj2) -> obj1.getLastChanged().compareTo(obj2.getLastChanged()));
         } else {
-            sortedArray.sort((obj1, obj2) -> obj1.getDateCreated().compareTo(obj2.getDateCreated()));
-        }
-
-        return sortedArray; 
+            arr.sort((obj1, obj2) -> obj1.getDateCreated().compareTo(obj2.getDateCreated()));
+        } 
     } // end articleSorter
 } // End Program
