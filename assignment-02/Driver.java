@@ -168,6 +168,7 @@ public class Driver {
                     }
 
                     // If Article type is valid, create Article
+                    // TODO: convert to just Article type, instead of child-types
                     try {
                         if (answer.toLowerCase().equals("investigation")) {
                             article = new Investigation(fileType, title, author, dateCreated, lastChanged);
@@ -269,7 +270,7 @@ public class Driver {
         return false;
     } // end testArrayContents
 
-    // TODO: fix Sorter
+    // TODO: test Sorter
     public static void articleSorter(String sortOption, ArrayList<Article> arr) {
 
         // sort Array
