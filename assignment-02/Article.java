@@ -13,25 +13,35 @@
 
 import java.util.Arrays;
 
-public abstract class Article {
+public class Article {
     // Variables
     protected String state, fileType, title, author, lastChanged, dateCreated;
 
     // Constructors
-    Article(String fileType, String title, String author, 
+    Article(String state, String fileType, String title, String author, 
             String dateCreated, String lastChanged) throws InvalidArticle {
+        setState(state);
         setFileType(fileType);
         setTitle(title);
         setAuthor(author);
         setLastChanged(lastChanged);
-        this.dateCreated = dateCreated;
+        setDateCreated(dateCreated);
+    }
+    Article(String[] elements) throws InvalidArticle {
+        setState(elements[0]);
+        setTitle(elements[1]);
+        setAuthor(elements[2]);
+        setLastChanged(elements[3]);
+        setDateCreated(elements[4]);
+        setFileType(elements[5]);
     }
 
     // Accessors & Mutators
     // state
     public String getState() { return this.state; }
     public void setState(String state) throws InvalidArticle {
-        if (Arrays.asList("Investigation", "Draft", "Send to Press").contains(state)) {
+        state = state.substring(0, 1).toUpperCase() + state.substring(1).toLowerCase();
+        if (Arrays.asList("Investigation", "Draft", "Send to press").contains(state)) {
             this.state = state;
         } else {
             throw new InvalidArticle("Invalid state");
@@ -73,5 +83,8 @@ public abstract class Article {
     }
     // dateCreated
     public String getDateCreated() { return this.dateCreated;}
+    public void setDateCreated(String newDate) {
+        this.dateCreated = newDate;
+    }
 
 } // End Program
