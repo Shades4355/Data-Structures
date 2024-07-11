@@ -1,10 +1,10 @@
 // File name:   Driver.java
 // Written by:  Shades Meyers
 // Description: Client-side program for organizing News Articles 
-// Challenges:  Sorting a list of Objects (was using "==" instead of ".equals()").
+// Challenges:  Sorting a list of Objects (was using "==" instead
+//                  of ".equals()" for String comparison).
 //              Reading in from a File.
-//              First pass of code wasn't OOP enough - large and unwieldy.
-//              Getting Scanner to work properly
+//              Getting Scanner to work properly.
 // Time Spent:  9 h 23 min
 //
 // Revision history:
