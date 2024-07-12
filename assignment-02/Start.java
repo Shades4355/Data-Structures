@@ -5,7 +5,7 @@
 //                  of ".equals()" for String comparison).
 //              Reading in from a File.
 //              Getting Scanner to work properly.
-// Time Spent:  12 h 28 min
+// Time Spent:  12 h 29 min
 //
 // Revision history:
 // Date:        By:     Action:
@@ -33,7 +33,7 @@ import java.util.Scanner;
 
 public class Start {
     private static final File FOLDER = new File("./Articles");
-    private static final String[] ARTICLESTATES = {"investigation", "draft", "send to press"};
+    private static final String[] ARTICLE_STATES = {"investigation", "draft", "send to press"};
 
     public static void main(String[] args) {
         // variables
@@ -333,7 +333,7 @@ public class Start {
             state = input.nextLine();
 
             // If article type is invalid, re-prompt for Article type
-            if (!testArrayContents(ARTICLESTATES, state.toLowerCase())) {
+            if (!testArrayContents(ARTICLE_STATES, state.toLowerCase())) {
                 System.out.println("I'm sorry, that Article state is not recognized");
                 continue;
             }
@@ -491,7 +491,7 @@ public class Start {
             state = input.nextLine();
 
             // If article type is invalid, re-prompt for Article type
-            if (!testArrayContents(ARTICLESTATES, state.toLowerCase())) {
+            if (!testArrayContents(ARTICLE_STATES, state.toLowerCase())) {
                 System.out.println("I'm sorry, that Article state is not recognized");
                 continue;
             }
