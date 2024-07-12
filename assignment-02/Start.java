@@ -5,7 +5,7 @@
 //                  of ".equals()" for String comparison).
 //              Reading in from a File.
 //              Getting Scanner to work properly.
-// Time Spent:  9 h 23 min
+// Time Spent:  12 h 23 min
 //
 // Revision history:
 // Date:        By:     Action:
@@ -14,6 +14,7 @@
 // 2024-July-09 SM      Added constructor
 //                      Started coding
 // 2024-July-10 SM      Con't coding
+// 2024-July-11 SM      Refactor & DRYing up
 
 
 import java.io.File;
@@ -21,18 +22,20 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class Driver {
+public class Start {
     public static void main(String[] args) {
         // variables
         Scanner input = new Scanner(System.in);
         String answer, sortOption;
         Article article;
         ArrayList<Article> articleList = new ArrayList<>();
+        final File folder = new File("./Articles");
         
         System.out.println("Welcome!");
 
@@ -60,14 +63,12 @@ public class Driver {
 
                     if (answer.toLowerCase().equals("manually")) {
                         // create Article based on user inputs
-                        article = createArticle(input);
+                        article = createArticle(input, folder);
                         // add Article to list
                         articleList.add(article);
                         break;
                     } else if (answer.toLowerCase().equals("import")) {
                         // import folder containing Articles
-                        final File folder = new File("./Articles");
-
                         if (!folder.exists()) {
                             System.out.println("Folder does not exist");
                             System.exit(1);
@@ -75,6 +76,12 @@ public class Driver {
                             System.out.println("File location not a folder");
                             System.exit(1);
                         } 
+
+                        // validate that folder isn't empty
+                        if (folder.listFiles().length == 0) {
+                            System.out.println("Folder is empty");
+                            break; // loop back to top
+                        }
 
                         // for each file in folder, create 1 Article and add to list
                         for (File file : folder.listFiles()) {
@@ -87,11 +94,11 @@ public class Driver {
 
                                 ArrayList<String> fileReader;
                                 try {
-                                    fileReader = new
-                                    ArrayList<String>(Files.readAllLines(filePath));
+                                    fileReader = new ArrayList<String>(Files.readAllLines(filePath));
                                 } catch (IOException e) {
                                     System.out.println(e);
                                     fileReader = null;
+                                    continue;
                                 }
 
                                 int i = 0;
@@ -101,17 +108,21 @@ public class Driver {
                                 }
 
                                 // try to create an Article from above variables
-                                try {
-                                    article = new Article(elements);
+                                // test for article with same title as element[1]
+                                if (!testArticleTitle(articleList, elements[1])) {
+                                    try {
+                                        article = new Article(elements);
 
-                                    articleList.add(article);
-                                } catch (InvalidArticle e) {
-                                    System.out.println("File " + file.getName() + " could not be converted automatically; please enter manually.");
-                                    System.out.println(e);
+                                        articleList.add(article);
+                                    } catch (InvalidArticle e) {
+                                        System.out.println("File " + file.getName() + " could not be converted automatically; please enter manually.");
+                                        System.out.println(e);
+                                        continue;
+                                    }
+                                } else {
                                     continue;
                                 }
-                            } else {
-                                if (file.exists() && !file.canRead())
+                            } else if (file.exists() && !file.canRead()) {
                                 System.out.println("File " + file.getName() + " could not be read; please enter manually.");
                             }
                         } // end For loop
@@ -169,7 +180,7 @@ public class Driver {
                 System.out.println("\nWould you like to change the state of an Article? (y/n)");
                 System.out.print(">> ");
 
-                answer = input.nextLine(); // TODO: crashing here on second loop
+                answer = input.nextLine();
 
                 if (!answer.toLowerCase().equals("y")) {
                     break;
@@ -195,7 +206,8 @@ public class Driver {
                         input.nextLine(); // clear cache
                         break;
                     }
-                    changeArticleState(articleList, answerInt - 1, input);
+                    input.nextLine();
+                    changeArticleState(articleList, answerInt - 1, input, folder);
                 }
                 break;
             }
@@ -234,7 +246,14 @@ public class Driver {
                     if (answerInt == -1) {
                         break;
                     } else if (answerInt >= 1 && answerInt <= articleList.size()) {
-                        removeArticle(articleList, answerInt - 1);
+                        Path path = Paths.get(folder + "\\" + articleList.get(answerInt - 1).getTitle() + ".txt");
+                        
+                        try {
+                            Files.delete(path);
+                        } catch (IOException e) {
+                            System.out.println("File could not be found in Folder.");
+                        }
+                            removeArticle(articleList, answerInt - 1);
                     }
                 }
                 input.nextLine();
@@ -253,7 +272,6 @@ public class Driver {
                 input.close();
                 System.exit(0);
             }
-
         } // end core While loop
     } // end main
 
@@ -266,6 +284,16 @@ public class Driver {
         }
         return false;
     } // end testArrayContents
+
+    // test for a given article title
+    public static boolean testArticleTitle(ArrayList<Article> aList, String searchFor) {
+        for (Article articleToTest : aList) {
+            if (articleToTest.getTitle().equals(searchFor)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     // sort given array based on a given criteria
     public static void articleSorter(String sortOption, ArrayList<Article> arr) {
@@ -288,7 +316,7 @@ public class Driver {
 
     // prompts user to enter values for each of an Article's fields
     // then attempts to create an Article
-    public static Article createArticle(Scanner input) {
+    public static Article createArticle(Scanner input, File folder) {
         // variables
         String state, fileType, title, author, lastChanged, dateCreated;
         String[] acceptedFileTypes = { "PDF", "DOC", "DOCX", "GDOC" };
@@ -418,12 +446,19 @@ public class Driver {
 
             // If Article type is valid, create Article
             try {
-                return new Article(state, fileType, title, author, dateCreated, lastChanged);
+                Article article = new Article(state, fileType, title, author, dateCreated, lastChanged);
+                boolean saved = saveArticleToFile(article, folder);
+
+                if (saved) {
+                    return article;
+                } else {
+                    continue;
+                }
             } catch (InvalidArticle e) {
                 System.err.println(e);
                 continue;
             }
-        }
+        } // end core While loop
     } // end createArticle
     
     // Display ArrayList
@@ -439,7 +474,7 @@ public class Driver {
     }
 
     // change an Article's state
-    public static void changeArticleState(ArrayList<Article> articleList, int index, Scanner input) {
+    public static void changeArticleState(ArrayList<Article> articleList, int index, Scanner input, File folder) {
         // variables
         String state;
 
@@ -465,6 +500,31 @@ public class Driver {
             System.err.println(e);
         }
 
+        // Over-write Article's file
+        Article article = articleList.get(index);
+        Path path = Paths.get(folder + "\\" + article.getTitle() + ".txt");
+
+        try {
+            Files.delete(path);
+            File updatedFile = new File(path.toString());
+
+            try {
+                if (updatedFile.createNewFile()) {
+                    Files.write(path, new String(article.getState() + "\n").getBytes(), StandardOpenOption.APPEND);
+                    Files.write(path, new String(article.getTitle() + "\n").getBytes(), StandardOpenOption.APPEND);
+                    Files.write(path, new String(article.getAuthor() + "\n").getBytes(), StandardOpenOption.APPEND);
+                    Files.write(path, new String(article.getLastChanged() + "\n").getBytes(), StandardOpenOption.APPEND);
+                    Files.write(path, new String(article.getDateCreated() + "\n").getBytes(), StandardOpenOption.APPEND);
+                    Files.write(path, article.getFileType().getBytes(), StandardOpenOption.APPEND);
+                }
+            } catch (IOException e) {
+                System.out.println("Change not saved to File");
+            }
+            
+        } catch (IOException e) {
+            System.out.println("File could not be found in Folder.");
+        }
+
         System.out.println();
 
         // print Article to show change
@@ -485,4 +545,36 @@ public class Driver {
         showArticles(arr);
     }
     
+    // save new Article to File in Folder
+    public static boolean saveArticleToFile(Article article, File folder) {
+        // save new Article to file
+        Path path = Paths.get(folder + "\\" + article.getTitle() + ".txt");
+
+        try {
+            File newArticle = new File(path.toString());
+            if (newArticle.createNewFile()) {
+                System.out.println("\nFile \"" + article.getTitle() + ".txt\" created");
+
+                Files.write(path, new String(article.getState() + "\n").getBytes(), StandardOpenOption.APPEND);
+                Files.write(path, new String(article.getTitle() + "\n").getBytes(), StandardOpenOption.APPEND);
+                Files.write(path, new String(article.getAuthor() + "\n").getBytes(), StandardOpenOption.APPEND);
+                Files.write(path, new String(article.getLastChanged() + "\n").getBytes(), StandardOpenOption.APPEND);
+                Files.write(path, new String(article.getDateCreated() + "\n").getBytes(), StandardOpenOption.APPEND);
+                Files.write(path, article.getFileType().getBytes(), StandardOpenOption.APPEND);
+
+                System.out.println("\n" + article.getTitle() + ".txt saved to:");
+                System.out.println(path.toString());
+                System.out.println();
+
+                return true;
+
+            } else {
+                System.out.println("\nA file of that name already exists; aborting save.");
+                return false;
+            }
+        } catch (IOException e) {
+            System.err.println("\nAn error ocurred; aborting save.");
+            return false;
+        }
+    }
 } // End Program
