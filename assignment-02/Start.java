@@ -5,7 +5,7 @@
 //                  of ".equals()" for String comparison).
 //              Reading in from a File.
 //              Getting Scanner to work properly.
-// Time Spent:  12 h 23 min
+// Time Spent:  12 h 28 min
 //
 // Revision history:
 // Date:        By:     Action:
@@ -15,6 +15,9 @@
 //                      Started coding
 // 2024-July-10 SM      Con't coding
 // 2024-July-11 SM      Refactor & DRYing up
+// 2024-July-12 SM      Print formatting updates
+//                      More DRYing up of code
+//                      Made constants CAPITAL, global, private, and static
 
 
 import java.io.File;
@@ -29,13 +32,15 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Start {
+    private static final File FOLDER = new File("./Articles");
+    private static final String[] ARTICLESTATES = {"investigation", "draft", "send to press"};
+
     public static void main(String[] args) {
         // variables
         Scanner input = new Scanner(System.in);
         String answer, sortOption;
         Article article;
         ArrayList<Article> articleList = new ArrayList<>();
-        final File folder = new File("./Articles");
         
         System.out.println("Welcome!");
 
@@ -63,28 +68,28 @@ public class Start {
 
                     if (answer.toLowerCase().equals("manually")) {
                         // create Article based on user inputs
-                        article = createArticle(input, folder);
+                        article = createArticle(input);
                         // add Article to list
                         articleList.add(article);
                         break;
                     } else if (answer.toLowerCase().equals("import")) {
                         // import folder containing Articles
-                        if (!folder.exists()) {
-                            System.out.println("Folder does not exist");
+                        if (!FOLDER.exists()) {
+                            System.out.println("\nFolder does not exist");
                             System.exit(1);
-                        } else if (folder.exists() && !folder.isDirectory()) {
-                            System.out.println("File location not a folder");
+                        } else if (FOLDER.exists() && !FOLDER.isDirectory()) {
+                            System.out.println("\nFile location not a folder");
                             System.exit(1);
                         } 
 
                         // validate that folder isn't empty
-                        if (folder.listFiles().length == 0) {
-                            System.out.println("Folder is empty");
+                        if (FOLDER.listFiles().length == 0) {
+                            System.out.println("\nFolder is empty");
                             break; // loop back to top
                         }
 
                         // for each file in folder, create 1 Article and add to list
-                        for (File file : folder.listFiles()) {
+                        for (File file : FOLDER.listFiles()) {
                             if (file.exists() && file.canRead() && !file.isDirectory()) {
                                 // create array to store parsed lines from file
                                 String[] elements = new String[6];
@@ -115,7 +120,7 @@ public class Start {
 
                                         articleList.add(article);
                                     } catch (InvalidArticle e) {
-                                        System.out.println("File " + file.getName() + " could not be converted automatically; please enter manually.");
+                                        System.out.println("\nFile " + file.getName() + " could not be converted automatically; please enter manually.");
                                         System.out.println(e);
                                         continue;
                                     }
@@ -123,7 +128,7 @@ public class Start {
                                     continue;
                                 }
                             } else if (file.exists() && !file.canRead()) {
-                                System.out.println("File " + file.getName() + " could not be read; please enter manually.");
+                                System.out.println("\nFile " + file.getName() + " could not be read; please enter manually.");
                             }
                         } // end For loop
                         System.out.println("\nFiles imported");
@@ -136,10 +141,10 @@ public class Start {
 
             // verify article(s) have been added to list
             if (articleList.size() <= 0) {
-                System.out.println("Article List is empty\n");
+                System.out.println("\nArticle List is empty");
 
                 // prompt to restart program
-                System.out.println("Would you like to start again? (y/n)");
+                System.out.println("\nWould you like to start again? (y/n)");
                 System.out.print(">> ");
 
                 answer = input.nextLine();
@@ -207,14 +212,14 @@ public class Start {
                         break;
                     }
                     input.nextLine();
-                    changeArticleState(articleList, answerInt - 1, input, folder);
+                    changeArticleState(articleList, answerInt - 1, input);
                 }
                 break;
             }
 
             // remove an Article from list
             while (true) {
-                System.out.println("\nWould you like to delete an Article from the display list? (y/n)");
+                System.out.println("\nWould you like to delete an Article? (y/n)");
                 System.out.print(">> ");
 
                 answer = input.nextLine();
@@ -246,12 +251,12 @@ public class Start {
                     if (answerInt == -1) {
                         break;
                     } else if (answerInt >= 1 && answerInt <= articleList.size()) {
-                        Path path = Paths.get(folder + "\\" + articleList.get(answerInt - 1).getTitle() + ".txt");
+                        Path path = Paths.get(FOLDER + "\\" + articleList.get(answerInt - 1).getTitle() + ".txt");
                         
                         try {
                             Files.delete(path);
                         } catch (IOException e) {
-                            System.out.println("File could not be found in Folder.");
+                            System.out.println("\nFile could not be found in Folder.");
                         }
                             removeArticle(articleList, answerInt - 1);
                     }
@@ -316,7 +321,7 @@ public class Start {
 
     // prompts user to enter values for each of an Article's fields
     // then attempts to create an Article
-    public static Article createArticle(Scanner input, File folder) {
+    public static Article createArticle(Scanner input) {
         // variables
         String state, fileType, title, author, lastChanged, dateCreated;
         String[] acceptedFileTypes = { "PDF", "DOC", "DOCX", "GDOC" };
@@ -328,8 +333,8 @@ public class Start {
             state = input.nextLine();
 
             // If article type is invalid, re-prompt for Article type
-            if (!Arrays.asList("investigation", "draft", "send to press").contains(state.toLowerCase())) {
-                System.out.println("I'm sorry, that Article type is not recognized");
+            if (!testArrayContents(ARTICLESTATES, state.toLowerCase())) {
+                System.out.println("I'm sorry, that Article state is not recognized");
                 continue;
             }
 
@@ -349,7 +354,7 @@ public class Start {
 
                 // if input invalid, re-prompt
                 if (!testArrayContents(acceptedFileTypes, fileType)) {
-                    System.out.println("I'm sorry, that file type is not on the recognized list");
+                    System.out.println("\nI'm sorry, that file type is not on the recognized list");
                     continue;
                 } else {
                     break;
@@ -365,13 +370,13 @@ public class Start {
 
                 title = input.nextLine();
 
-                System.out.println("Is \"" + title + "\" correct? (y/n)");
+                System.out.println("\nIs \"" + title + "\" correct? (y/n)");
                 System.out.print(">> ");
 
                 correct = input.nextLine();
 
                 if (!correct.toLowerCase().equals("y")) {
-                    System.out.println("Ok; let's try again");
+                    System.out.println("\nOk; let's try again");
                     continue;
                 } else {
                     break;
@@ -387,13 +392,13 @@ public class Start {
 
                 author = input.nextLine();
 
-                System.out.println("Is \"" + author + "\" correct? (y/n)");
+                System.out.println("\nIs \"" + author + "\" correct? (y/n)");
                 System.out.print(">> ");
 
                 correct = input.nextLine();
 
                 if (!correct.toLowerCase().equals("y")) {
-                    System.out.println("Ok; let's try again");
+                    System.out.println("\nOk; let's try again");
                     continue;
                 } else {
                     break;
@@ -409,13 +414,13 @@ public class Start {
 
                 lastChanged = input.nextLine();
 
-                System.out.println("Is \"" + lastChanged + "\" correct? (y/n)");
+                System.out.println("\nIs \"" + lastChanged + "\" correct? (y/n)");
                 System.out.print(">> ");
 
                 correct = input.nextLine();
 
                 if (!correct.toLowerCase().equals("y")) {
-                    System.out.println("Ok; let's try again");
+                    System.out.println("\nOk; let's try again");
                     continue;
                 } else {
                     break;
@@ -431,13 +436,13 @@ public class Start {
 
                 dateCreated = input.nextLine();
 
-                System.out.println("Is \"" + dateCreated + "\" correct? (y/n)");
+                System.out.println("\nIs \"" + dateCreated + "\" correct? (y/n)");
                 System.out.print(">> ");
 
                 correct = input.nextLine();
 
                 if (!correct.toLowerCase().equals("y")) {
-                    System.out.println("Ok; let's try again");
+                    System.out.println("\nOk; let's try again");
                     continue;
                 } else {
                     break;
@@ -447,7 +452,7 @@ public class Start {
             // If Article type is valid, create Article
             try {
                 Article article = new Article(state, fileType, title, author, dateCreated, lastChanged);
-                boolean saved = saveArticleToFile(article, folder);
+                boolean saved = saveArticleToFile(article);
 
                 if (saved) {
                     return article;
@@ -474,7 +479,7 @@ public class Start {
     }
 
     // change an Article's state
-    public static void changeArticleState(ArrayList<Article> articleList, int index, Scanner input, File folder) {
+    public static void changeArticleState(ArrayList<Article> articleList, int index, Scanner input) {
         // variables
         String state;
 
@@ -486,8 +491,8 @@ public class Start {
             state = input.nextLine();
 
             // If article type is invalid, re-prompt for Article type
-            if (!Arrays.asList("investigation", "draft", "send to press").contains(state.toLowerCase())) {
-                System.out.println("I'm sorry, that Article type is not recognized");
+            if (!testArrayContents(ARTICLESTATES, state.toLowerCase())) {
+                System.out.println("I'm sorry, that Article state is not recognized");
                 continue;
             }
             break;
@@ -496,13 +501,13 @@ public class Start {
         try{
             articleList.get(index).setState(state);
         } catch (InvalidArticle e) {
-            System.out.println("State could not be updated");
+            System.out.println("\nState could not be updated");
             System.err.println(e);
         }
 
         // Over-write Article's file
         Article article = articleList.get(index);
-        Path path = Paths.get(folder + "\\" + article.getTitle() + ".txt");
+        Path path = Paths.get(FOLDER + "\\" + article.getTitle() + ".txt");
 
         try {
             Files.delete(path);
@@ -518,18 +523,17 @@ public class Start {
                     Files.write(path, article.getFileType().getBytes(), StandardOpenOption.APPEND);
                 }
             } catch (IOException e) {
-                System.out.println("Change not saved to File");
+                System.out.println("\nChange not saved to File");
             }
             
         } catch (IOException e) {
-            System.out.println("File could not be found in Folder.");
+            System.out.println("\nFile could not be found in Folder.");
         }
 
         System.out.println();
 
         // print Article to show change
-        System.out.println(articleList.get(
-                index).getTitle() + " (" + articleList.get(index).getState() + ")");
+        System.out.println(articleList.get(index).getTitle() + " (" + articleList.get(index).getState() + ")");
         System.out.println("By: " + articleList.get(index).getAuthor());
         System.out.println("Date Created: " + articleList.get(index).getDateCreated());
         System.out.println("Last Changed: " + articleList.get(index).getLastChanged());
@@ -546,9 +550,9 @@ public class Start {
     }
     
     // save new Article to File in Folder
-    public static boolean saveArticleToFile(Article article, File folder) {
+    public static boolean saveArticleToFile(Article article) {
         // save new Article to file
-        Path path = Paths.get(folder + "\\" + article.getTitle() + ".txt");
+        Path path = Paths.get(FOLDER + "\\" + article.getTitle() + ".txt");
 
         try {
             File newArticle = new File(path.toString());
