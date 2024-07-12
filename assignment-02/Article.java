@@ -51,12 +51,11 @@ public class Article {
     public String getFileType() { return fileType; }
     public void setFileType(String fileType) throws InvalidArticle {
         // check if 
-        if (Arrays.asList("PDF", "DOC", "DOCX", "GDOC").contains(fileType.toUpperCase())) {
+        if (fileType.length() > 0) {
             this.fileType = fileType.toUpperCase();
         } else {
-            throw new InvalidArticle("Invalid file type");
+            throw new InvalidArticle("Missing file type");
         }
-        
     }
     // Title
     public String getTitle() { return this.title; }
