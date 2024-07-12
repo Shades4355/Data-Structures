@@ -5,7 +5,7 @@
 //                  of ".equals()" for String comparison).
 //              Reading in from a File.
 //              Getting Scanner to work properly.
-// Time Spent:  12 h 29 min
+// Time Spent:  13 h 04 min
 //
 // Revision history:
 // Date:        By:     Action:
@@ -16,8 +16,10 @@
 // 2024-July-10 SM      Con't coding
 // 2024-July-11 SM      Refactor & DRYing up
 // 2024-July-12 SM      Print formatting updates
-//                      More DRYing up of code (more to do)
+//                      More DRYing up of code
 //                      Made constants CAPITAL, global, private, and static
+//                      Add change file type prompt
+//                      Bug testing (and fixing)
 
 
 import java.io.File;
@@ -34,6 +36,7 @@ import java.util.Scanner;
 public class Start {
     private static final File FOLDER = new File("./Articles");
     private static final String[] ARTICLE_STATES = {"investigation", "draft", "send to press"};
+    private static final String[] FILE_TYPES = { "PDF", "DOC", "DOCX", "GDOC" };
 
     public static void main(String[] args) {
         // variables
@@ -203,6 +206,7 @@ public class Start {
                             break;
                         } catch (InputMismatchException e) {
                             System.out.println("\nPlease enter an integer between 1 and " + articleList.size() + " or -1");
+                            input.nextLine(); // clear cache
                             continue;
                         }
                     }
@@ -210,10 +214,52 @@ public class Start {
                     if (answerInt == -1) {
                         input.nextLine(); // clear cache
                         break;
+                    } else if (answerInt >= 1 && answerInt <= articleList.size()) {
+                        input.nextLine();
+                        changeArticleState(articleList, answerInt - 1, input);
                     }
-                    input.nextLine();
-                    changeArticleState(articleList, answerInt - 1, input);
                 }
+                break;
+            }
+
+            // prompt to change file type
+            while (true) {
+                System.out.println("\nWould you like to change an Article's file type? (y/n)");
+                System.out.print(">> ");
+
+                answer = input.nextLine();
+
+                if (answer == null) {
+                    continue;
+                } else if (!answer.toLowerCase().equals("y")) {
+                    break;
+                }
+
+                showArticles(articleList);
+
+                while (true) {
+                    System.out.println("\nPlease choose an article (1 - " + articleList.size() + "; or -1 to exit)");
+
+                    // validates input is an integer
+                    int answerInt;
+                    while (true) {
+                        try {
+                            answerInt = input.nextInt();
+                            break;
+                        } catch (InputMismatchException e) {
+                            System.out.println("\nPlease enter an integer between 1 and " + articleList.size() + " or -1");
+                            input.nextLine(); // clear cache
+                            continue;
+                        }
+                    }
+
+                    if (answerInt == -1) {
+                        break;
+                    } else if (answerInt >= 1 && answerInt <= articleList.size()) {
+                        changeFileType(articleList, answerInt - 1, input);
+                    }
+                }
+                input.nextLine();
                 break;
             }
 
@@ -242,8 +288,8 @@ public class Start {
                             answerInt = input.nextInt();
                             break;
                         } catch (InputMismatchException e) {
-                            System.out.println("\nPlease enter an integer between 1 and " + articleList.size());
-                            input.nextLine();
+                            System.out.println("\nPlease enter an integer between 1 and " + articleList.size() + " or -1");
+                            input.nextLine(); // clear cache
                             continue;
                         }
                     }
@@ -324,10 +370,16 @@ public class Start {
     public static Article createArticle(Scanner input) {
         // variables
         String state, fileType, title, author, lastChanged, dateCreated;
-        String[] acceptedFileTypes = { "PDF", "DOC", "DOCX", "GDOC" };
         
         while (true) {
-            System.out.println("\nWhat type of Article do you wish to add? (Investigation, Draft, Send to Press)");
+            System.out.println("\nWhat type of Article do you wish to add?");
+            System.out.print("Options: ");
+            for (int i = 0; i < ARTICLE_STATES.length; i++) {
+                System.out.print(ARTICLE_STATES[i]);
+                if (i < ARTICLE_STATES.length - 1) {
+                    System.out.print(", ");
+                }
+            }
             System.out.print(">> ");
 
             state = input.nextLine();
@@ -343,9 +395,9 @@ public class Start {
             while (true) {
                 System.out.println("\nWhat type of File is this article?");
                 System.out.print("Accepted formats are: ");
-                for (int i = 0; i < acceptedFileTypes.length; i++) {
-                    System.out.print(acceptedFileTypes[i]);
-                    if (i < acceptedFileTypes.length - 1) {
+                for (int i = 0; i < FILE_TYPES.length; i++) {
+                    System.out.print(FILE_TYPES[i]);
+                    if (i < FILE_TYPES.length - 1) {
                         System.out.print(", ");
                     }
                 }
@@ -353,7 +405,7 @@ public class Start {
                 fileType = input.nextLine();
 
                 // if input invalid, re-prompt
-                if (!testArrayContents(acceptedFileTypes, fileType)) {
+                if (!testArrayContents(FILE_TYPES, fileType)) {
                     System.out.println("\nI'm sorry, that file type is not on the recognized list");
                     continue;
                 } else {
@@ -485,7 +537,14 @@ public class Start {
 
         // prompt for new State
         while (true) {
-            System.out.println("\nWhat state do you wish to change the Article to? (Investigation, Draft, Send to Press)");
+            System.out.println("\nWhat state do you wish to change the Article to?");
+            System.out.print("Options: ");
+            for (int i = 0; i < ARTICLE_STATES.length; i++) {
+                System.out.print(ARTICLE_STATES[i]);
+                if (i < ARTICLE_STATES.length - 1) {
+                    System.out.print(", ");
+                }
+            }
             System.out.print(">> ");
 
             state = input.nextLine();
@@ -580,5 +639,74 @@ public class Start {
             System.err.println("\nAn error ocurred; aborting save.");
             return false;
         }
-    }
+    } 
+
+    // change file type
+    public static void changeFileType(ArrayList<Article> articleList, int index, Scanner input) {
+        // variables
+        String fileType;
+
+        // prompt for new State
+        while (true) {
+            System.out.print("\nWhat file type do you wish to change the Article to? ");
+            for (int i = 0; i < FILE_TYPES.length; i++) {
+                System.out.print(FILE_TYPES[i]);
+                if (i < FILE_TYPES.length - 1) {
+                    System.out.print(", ");
+                }
+            }
+            System.out.print("\n>> ");
+
+            fileType = input.nextLine();
+
+            // If article type is invalid, re-prompt for Article type
+            if (!testArrayContents(FILE_TYPES, fileType.toLowerCase())) {
+                System.out.println("I'm sorry, that Article file type is not recognized");
+                continue;
+            }
+            break;
+        }
+
+        try {
+            articleList.get(index).setFileType(fileType);
+        } catch (InvalidArticle e) {
+            System.out.println("\nFile type could not be updated");
+            System.err.println(e);
+        }
+
+        // Over-write Article's file
+        Article article = articleList.get(index);
+        Path path = Paths.get(FOLDER + "\\" + article.getTitle() + ".txt");
+
+        try {
+            Files.delete(path);
+            File updatedFile = new File(path.toString());
+
+            try {
+                if (updatedFile.createNewFile()) {
+                    Files.write(path, new String(article.getState() + "\n").getBytes(), StandardOpenOption.APPEND);
+                    Files.write(path, new String(article.getTitle() + "\n").getBytes(), StandardOpenOption.APPEND);
+                    Files.write(path, new String(article.getAuthor() + "\n").getBytes(), StandardOpenOption.APPEND);
+                    Files.write(path, new String(article.getLastChanged() + "\n").getBytes(), StandardOpenOption.APPEND);
+                    Files.write(path, new String(article.getDateCreated() + "\n").getBytes(), StandardOpenOption.APPEND);
+                    Files.write(path, article.getFileType().getBytes(), StandardOpenOption.APPEND);
+                }
+            } catch (IOException e) {
+                System.out.println("\nChange not saved to File");
+            }
+
+        } catch (IOException e) {
+            System.out.println("\nFile could not be found in Folder.");
+        }
+
+        System.out.println();
+
+        // print Article to show change
+        System.out.println(articleList.get(index).getTitle() + " (" + articleList.get(index).getState() + ")");
+        System.out.println("By: " + articleList.get(index).getAuthor());
+        System.out.println("Date Created: " + articleList.get(index).getDateCreated());
+        System.out.println("Last Changed: " + articleList.get(index).getLastChanged());
+        System.out.println("File Type: " + articleList.get(index).getFileType());
+
+    } // end changeFileType
 } // End Program
