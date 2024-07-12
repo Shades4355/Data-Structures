@@ -15,7 +15,7 @@ import java.util.Arrays;
 
 public class Article {
     // Variables
-    protected String state, fileType, title, author, lastChanged, dateCreated;
+    private String state, fileType, title, author, lastChanged, dateCreated;
 
     // Constructors
     Article(String state, String fileType, String title, String author, 
