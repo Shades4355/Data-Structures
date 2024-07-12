@@ -16,7 +16,7 @@
 // 2024-July-10 SM      Con't coding
 // 2024-July-11 SM      Refactor & DRYing up
 // 2024-July-12 SM      Print formatting updates
-//                      More DRYing up of code
+//                      More DRYing up of code (more to do)
 //                      Made constants CAPITAL, global, private, and static
 
 
