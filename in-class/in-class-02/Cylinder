@@ -1,0 +1,25 @@
+// Cylinder HAS A circle
+
+public class Cylinder {
+    // Variables
+    Circle topBottom;
+    double height;
+
+    // Constructors
+    Cylinder(Circle circle, double height) {
+        this.topBottom = circle;
+        this.height = height;
+    }
+
+    // Accessors & Mutators
+    // Radius
+    public double getRadius() { return topBottom.getRadius(); }
+    public void setRadius(double radius) { topBottom.setRadius(radius); }
+    // Height
+    public double getHeight() { return this.height; }
+    public void setHeight(double height) { this.height = height; }
+
+    // Area
+    //Perimeter
+
+}
