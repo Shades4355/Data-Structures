@@ -5,7 +5,7 @@ public class Driver {
         SLLNode<String> node2 = new SLLNode<String>("Second");
         SLLNode<String> node3 = new SLLNode<String>("Third");
 
-        SLL<String> sll = new SLL<String>(node1);
+        SLL_v2<String> sll = new SLL_v2<String>(node1);
         sll.insert(node2);
         sll.insert(node3);
 

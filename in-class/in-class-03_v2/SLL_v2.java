@@ -1,11 +1,11 @@
 
-public class SLL<E> {
+public class SLL_v2<E> {
     // variables
     private int size;
     private SLLNode<E> header;
 
     // Constructors
-    SLL(SLLNode<E> header) {
+    SLL_v2(SLLNode<E> header) {
         this.size = 1;
         this.header = header;
     }
