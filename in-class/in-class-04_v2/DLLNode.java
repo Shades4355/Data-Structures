@@ -1,3 +1,12 @@
+// File name:   DLLNode.java
+// Written by:  Shades Meyers
+// Description: A generic Double Linked List Node
+//
+// Revision history:
+// Date:        By:     Action:
+// -------------------------------
+// 2024-July-11 SM      File created
+
 
 public class DLLNode<E> {
     // variables

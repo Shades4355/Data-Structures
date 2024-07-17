@@ -5,7 +5,9 @@
 // Revision history:
 // Date:        By:     Action:
 // -------------------------------
+// 2024-July-11 SM      File created
 // 2024-July-16 SM      Updated
+// 2024-July-17 SM      Updated
 
 
 import java.util.Objects;
@@ -47,22 +49,27 @@ public class DLL_v2<E> {
     }
     public void addLast(E element) {
         DLLNode<E> node = new DLLNode<E>(element);
+
         if (this.header == null) { // if list is empty...
             this.header = node;
             this.trailer = node;
         } else { // if list has at least 1 node...
             this.trailer.setNextNode(node);
+            node.setPrevNode(this.trailer);
             this.trailer = node;
         }
         this.size += 1;
     }
     public void addFirst(E element) {
         DLLNode<E> node = new DLLNode<E>(element);
-        node.setNextNode(this.header);
-        this.header = node;
 
-        if (this.trailer == null) { // if list was empty before addition...
+        if (this.header == null) { // if list is empty...
+            this.header = node;
             this.trailer = node;
+        } else { // if list has at least 1 node...
+            node.setNextNode(this.header);
+            this.header.setPrevNode(node);
+            this.header = node;
         }
 
         this.size += 1;
@@ -97,7 +104,7 @@ public class DLL_v2<E> {
     public E removeFirst() {
         if (this.size > 0){ // if there is a node to remove...
             DLLNode<E> toBeRemoved = this.header;
-            if (toBeRemoved.getNextNode() != null) {
+            if (toBeRemoved.getNextNode() != null) { // if there's more than 1 node...
                 this.header = toBeRemoved.getNextNode();
                 size -= 1;
             } else { // if there's only 1 node...
@@ -143,9 +150,10 @@ public class DLL_v2<E> {
             // if node has a before and after...
             node.getPrevNode().setNextNode(node.getNextNode());
             node.getNextNode().setPrevNode(node.getPrevNode());
-        } else if (node.getPrevNode() == null && node.getNextNode() != null) { // if node is in the header...
+        } else if (node.getPrevNode() == null && node.getNextNode() != null) {
+            // if node is the Header...
             this.removeFirst();
-        } else { // if node is trailer...
+        } else { // if node is the Trailer...
             this.removeLast();
         }
 
