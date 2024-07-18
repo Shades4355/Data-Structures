@@ -13,33 +13,37 @@
 
 public class Deque<E> {
     // variables
-    // private DLL<E> data;
+    private DoublyLL<E> data;
 
     // Constructors
-    // Deque() {}
-    // Deque( E element ) {
-    //     // new node with element
-    //     // add node to DLL list
-    // }
+    Deque() {
+        data = new DoublyLL<E>();
+    }
+    Deque( E element ) {
+        // new node with element
+        data = new DoublyLL<E>();
+        // add node to DLL list
+        data.addLast(element);
+    }
 
     // Methods
     // get size
-    // public int size() { return data.size(); }
+    public int size() { return data.getSize(); }
 
     // check if list is empty
-    // public boolean isEmpty() { return data.size() == 0; }
+    public boolean isEmpty() { return data.isEmpty(); }
 
     // peek at list
-    // public E first() { return data.first(); }
-    // public E last() { return data.last(); }
+    public E first() { return data.first(); }
+    public E last() { return data.last(); }
 
     // add elements to list
-    // public void add(E element) { data.add(element); }
-    // public void addFirst(E element) { data.addFirst(element); }
-    // public void addLast(E element) { data.addLast(element); }
+    public void add(E element) { data.addLast(element); }
+    public void addFirst(E element) { data.addFirst(element); }
+    public void addLast(E element) { data.addLast(element); }
 
     // remove elements from list
-    // public E removeFirst() { return data.removeFirst(); }
-    // public E removeLast() { return data.removeLast(); }
+    public E removeFirst() { return data.removeFirst(); }
+    public E removeLast() { return data.removeLast(); }
 
 } // end program
