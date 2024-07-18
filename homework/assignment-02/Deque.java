@@ -3,7 +3,7 @@
 // Description: A Double-Ended Queue, implemented
 //                  with a Double Linked List.
 // Challenges:  None
-// Time Spent:  30 min
+// Time Spent:  31 min
 //
 // Revision history:
 // Date:        By:     Action:
