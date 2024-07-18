@@ -24,7 +24,7 @@ public class Deque<E> {
         // new node with element
         data = new DoublyLL<E>();
         // add node to DLL list
-        data.addLast(element);
+        data.addFirst(element); // .addLast(element) would work just as well
     }
 
     // Methods
@@ -39,7 +39,6 @@ public class Deque<E> {
     public E last() { return data.last(); }
 
     // add elements to list
-    public void add(E element) { data.addLast(element); }
     public void addFirst(E element) { data.addFirst(element); }
     public void addLast(E element) { data.addLast(element); }
 
