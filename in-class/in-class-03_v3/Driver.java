@@ -1,3 +1,12 @@
+// File name:   Driver.java
+// Written by:  Shades Meyers
+// Description: A Tester for SLL and SLLNode
+//
+// Revision history:
+// Date:        By:     Action:
+// -------------------------------
+// 2024-July-16 SM      Updated
+
 
 public class Driver {
     public static void main(String[] args) {
@@ -5,11 +14,11 @@ public class Driver {
         SLLNode<String> node2 = new SLLNode<String>("Second");
         SLLNode<String> node3 = new SLLNode<String>("Third");
 
-        SLL_v2<String> sll = new SLL_v2<String>(node1);
+        SLL<String> sll = new SLL<String>(node1);
         sll.insert(node2);
         sll.insert(node3);
 
-        SLLNode<String> node = sll.first();
+        SLLNode<String> node = sll.getHeader();
         while (node != null) {
             System.out.println(node.getElement());
             node = node.getNextNode();
@@ -18,14 +27,14 @@ public class Driver {
 
         System.out.println();
 
-        System.out.println("Last entry: " + sll.last().getElement());
+        System.out.println("Last entry: " + sll.last());
 
         System.out.println();
 
         System.out.println("Add \"Zero\" to list");
         sll.insertFirst(new SLLNode<String>("Zero"));
         
-        node = sll.first();
+        node = sll.getHeader();
         while (node != null) {
             System.out.println(node.getElement());
             node = node.getNextNode();
@@ -42,7 +51,7 @@ public class Driver {
         }
  
 
-        node = sll.first();
+        node = sll.getHeader();
         while (node != null) {
             System.out.println(node.getElement());
             node = node.getNextNode();
@@ -58,7 +67,7 @@ public class Driver {
         System.out.println(e);
         }
         
-        node = sll.first();
+        node = sll.getHeader();
         while (node != null) {
             System.out.println(node.getElement());
             node = node.getNextNode();

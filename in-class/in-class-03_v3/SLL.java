@@ -1,3 +1,13 @@
+// File name:   SLL.java
+// Written by:  Shades Meyers
+// Description: A single linked list of SLLNodes
+//
+// Revision history:
+// Date:        By:     Action:
+// -------------------------------
+// 2024-July-10 SM      File created
+// 2024-July-16 SM      Updated based on Grade feedback
+
 
 public class SLL<E> {
     // variables
@@ -8,6 +18,10 @@ public class SLL<E> {
     SLL(SLLNode<E> header) {
         this.size = 1;
         this.header = header;
+    }
+    SLL() {
+        this.size = 0;
+        this.header = null;
     }
 
     // Accessors & Mutators
@@ -33,7 +47,7 @@ public class SLL<E> {
         this.size += 1;
     }
     // Get
-    public SLLNode<E> get(int num) throws ArrayIndexOutOfBoundsException {
+    public E get(int num) throws ArrayIndexOutOfBoundsException {
         SLLNode<E> currentNode = this.header;
         if (num <= this.size) {
             for (int i = 1; i < num; i++) {
@@ -43,31 +57,37 @@ public class SLL<E> {
             throw new ArrayIndexOutOfBoundsException();
         }
 
-        return currentNode;
+        return currentNode.getElement();
     }
+    
+    // get Head
+    public SLLNode<E> getHeader() { return this.header; }
+
     // get first
-    public SLLNode<E> first() {
-        return this.header;
+    public E first() {
+        return this.header.getElement();
     }
     // get last
-    public SLLNode<E> last() {
+    public E last() {
         SLLNode<E> node = this.header;
 
         while (node.getNextNode() != null) {
             node = node.getNextNode();
         }
-        return node;
+        return node.getElement();
     }
     // removal
-    public void removeFirst() throws Exception {
-        if (this.header.getNextNode() != null) {
+    public E removeFirst() throws Exception {
+        SLLNode<E> removed = this.header;
+        if (!this.isEmpty()) {
             this.header = this.header.getNextNode();
             size -= 1;
         } else {
-            throw new Exception("Single Linked List must contain at least one entry");
+            throw new Exception("Single Linked List is already empty");
         }
+        return removed.getElement();
     }
-    public void removeLast() throws Exception {
+    public E removeLast() throws Exception {
         SLLNode<E> node1 = this.header;
         SLLNode<E> node2 = null;
 
@@ -79,8 +99,9 @@ public class SLL<E> {
             node2.setNextNode(null);
             size -= 1;
         } else {
-            throw new Exception("Single Linked List must contain at least one entry");
+            throw new Exception("Single Linked List already empty");
         }
+        return node1.getElement();
     }
     public void remove() throws Exception {
         this.removeLast();
