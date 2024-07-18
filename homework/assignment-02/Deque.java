@@ -34,8 +34,9 @@ public class Deque<E> {
     // public E last() { return data.last(); }
 
     // add elements to list
-    // public void addFirst(E element) { data.addFirst( element ); }
-    // public void addLast(E element) { data.addLast( element ); }
+    // public void add(E element) { data.add(element); }
+    // public void addFirst(E element) { data.addFirst(element); }
+    // public void addLast(E element) { data.addLast(element); }
 
     // remove elements from list
     // public E removeFirst() { return data.removeFirst(); }
