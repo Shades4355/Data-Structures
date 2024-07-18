@@ -2,13 +2,14 @@
 // Written by:  Shades Meyers
 // Description: A Double-Ended Queue, implemented
 //                  with a Double Linked List.
-// Challenges:  
-// Time Spent:  15 min + 
+// Challenges:  None
+// Time Spent:  30 min
 //
 // Revision history:
 // Date:        By:     Action:
 // -------------------------------
-// 2024-July-17 SM      File created
+// 2024-July-17 SM      File created & outlined needed Methods
+// 2024-July-18 SM      Added all Methods
 
 
 public class Deque<E> {
