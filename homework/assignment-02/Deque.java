@@ -1,7 +1,7 @@
 // File name:   Deque.java
 // Written by:  Shades Meyers
 // Description: A Double-Ended Queue, implemented
-//                  with a Double Linked List.
+//                  with a partner's Doubly Linked List.
 // Challenges:  None
 // Time Spent:  31 min
 //
