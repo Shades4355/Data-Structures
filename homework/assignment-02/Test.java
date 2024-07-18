@@ -1,8 +1,9 @@
 // File name:   Test.java
 // Written by:  Shades Meyers
-// Description: 
+// Description: A tester file intended to test functionality
+//                  of Deque.java and partner's DLL file.
 // Challenges:  
-// Time Spent:  
+// Time Spent:  1 min + 
 //
 // Revision history:
 // Date:        By:     Action:
