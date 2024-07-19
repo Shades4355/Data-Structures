@@ -4,7 +4,7 @@ package homework.assignment03;
 // Written by:  Shades Meyers
 // Description: A Doubly Linked List
 // Challenges:  
-// Time Spent:  42 min + 
+// Time Spent:  49 min
 //
 // Revision history:
 // Date:        By:     Action:
@@ -12,6 +12,10 @@ package homework.assignment03;
 // 2024-July-18 SM      Copied DLL from in-class-04_v2 folder
 //                      Copied and modified DLLNode form 
 //                          in-class-04_v2
+// 2024-July-19 SM      Con't modifications, based on Book's
+//                          expectations
+//                      Renamed size variable to sz to avoid
+//                          confusion with size() method
 
 
 import java.util.Objects;
@@ -45,58 +49,58 @@ public class DLL<E> {
             this.element = element;
         }
 
-        public Node<E> getNextNode() {
+        public Node<E> getNext() {
             return this.nextNode;
         }
 
-        public void setNextNode(Node<E> nextNode) {
+        public void setNext(Node<E> nextNode) {
             this.nextNode = nextNode;
         }
 
-        public Node<E> getPrevNode() {
+        public Node<E> getPrev() {
             return this.prevNode;
         }
 
-        public void setPrevNode(Node<E> prevNode) {
+        public void setPrev(Node<E> prevNode) {
             this.prevNode = prevNode;
         }
 
         // has next
         public boolean hasNext() {
-            return this.getNextNode() != null;
+            return this.getNext() != null;
         }
 
     } // end Node class
 
     // variables
-    private int size;
+    private int sz;
     private Node<E> header;
     private Node<E> trailer;
 
     // Constructors
     DLL(Node<E> node) {
-        this.size = 1;
+        this.sz = 1;
         this.header = new Node<E>(null, null, node);
         this.trailer = new Node<E>(null, node, null);
-        node.setPrevNode(this.header);
-        node.setNextNode(this.trailer);
+        node.setPrev(this.header);
+        node.setNext(this.trailer);
     }
     DLL() {
-        this.size = 0;
+        this.sz = 0;
         this.header = new Node<E>(null, null, null);
         this.trailer = new Node<E>(null, this.header, null);
-        this.header.setNextNode(this.trailer);
+        this.header.setNext(this.trailer);
     }
 
     // Accessors & Mutators
     // Size
     public int size() {
-        return this.size;
+        return this.sz;
     }
 
     // is empty?
     public boolean isEmpty() {
-        return this.size == 0;
+        return this.sz == 0;
     }
 
     // Insertions
@@ -108,53 +112,53 @@ public class DLL<E> {
         if (this.header == null) { // if list is empty...
             this.addBetween(element, this.header, this.trailer);
         } else { // if list has at least 1 node...
-            this.addBetween(element, this.trailer.getPrevNode(), this.trailer);
+            this.addBetween(element, this.trailer.getPrev(), this.trailer);
         }
     }
     public void addFirst(E element) {
         if (this.header == null) { // if list is empty...
             this.addBetween(element, this.header, this.trailer);
         } else { // if list has at least 1 node...
-            this.addBetween(element, this.header, this.header.getNextNode());
+            this.addBetween(element, this.header, this.header.getNext());
         }
     }
 
     // Get
     public E get(int index) { // get element at given index
         Node<E> currentNode = this.header;
-        if (index < this.size && index >= 0) {
-            for (int i = 1; i <= index; i++) {
-                currentNode = currentNode.getNextNode();
+        if (index < this.sz && index >= 0) {
+            for (int i = 0; i <= index; i++) {
+                currentNode = currentNode.getNext();
             }
         } else {
             return null;
         }
         return currentNode.getElement();
     }
-    public E first() { return this.header.getNextNode().getElement(); }
-    public E last() { return this.trailer.getPrevNode().getElement(); }
+    public E first() { return this.header.getNext().getElement(); }
+    public E last() { return this.trailer.getPrev().getElement(); }
 
     // add between
-    public void addBetween(E element, Node<E> before, Node<E> after) {
+    private void addBetween(E element, Node<E> before, Node<E> after) {
         Node<E> newNode = new Node<E>(element, before, after);
-        before.setNextNode(newNode);
-        after.setPrevNode(newNode);
+        before.setNext(newNode);
+        after.setPrev(newNode);
 
-        this.size++;
+        this.sz++;
     }
 
     // removal
     public E removeFirst() {
-        if (this.size > 0) { // if there is a node to remove...
-            Node<E> toBeRemoved = this.header.getNextNode();
-            if (toBeRemoved.getNextNode() != this.trailer) { // if there's more than 1 node...
-                this.header.setNextNode(toBeRemoved.getNextNode());
-                toBeRemoved.getNextNode().setPrevNode(this.header);
-                size -= 1;
+        if (this.sz > 0) { // if there is a node to remove...
+            Node<E> toBeRemoved = this.header.getNext();
+            if (toBeRemoved.getNext() != this.trailer) { // if there's more than 1 node...
+                this.header.setNext(toBeRemoved.getNext());
+                toBeRemoved.getNext().setPrev(this.header);
+                this.sz -= 1;
             } else { // if there's only 1 node...
-                this.header.setNextNode(this.trailer);
-                this.trailer.setPrevNode(this.header);
-                this.size = 0;
+                this.header.setNext(this.trailer);
+                this.trailer.setPrev(this.header);
+                this.sz = 0;
             }
 
             return toBeRemoved.getElement();
@@ -164,16 +168,16 @@ public class DLL<E> {
     }
 
     public E removeLast() {
-        if (this.size > 0) { // If there's a node to remove...
-            Node<E> toBeRemoved = this.trailer.getPrevNode();
-            if (toBeRemoved.getPrevNode() != this.header) { // if there's more than 1 node in list...
-                toBeRemoved.getPrevNode().setNextNode(this.trailer);
-                this.trailer.setPrevNode(toBeRemoved.getPrevNode());
-                this.size -= 1;
+        if (this.sz > 0) { // If there's a node to remove...
+            Node<E> toBeRemoved = this.trailer.getPrev();
+            if (toBeRemoved.getPrev() != this.header) { // if there's more than 1 node in list...
+                toBeRemoved.getPrev().setNext(this.trailer);
+                this.trailer.setPrev(toBeRemoved.getPrev());
+                this.sz -= 1;
             } else { // if there's only 1 node in list...
-                this.header.setNextNode(this.trailer);
-                this.trailer.setPrevNode(this.header);
-                this.size = 0;
+                this.header.setNext(this.trailer);
+                this.trailer.setPrev(this.header);
+                this.sz = 0;
             }
             return toBeRemoved.getElement();
         } else { // if there's no nodes in list...
@@ -191,8 +195,8 @@ public class DLL<E> {
         }
 
         // as long as there's 1 or more nodes in list...
-        node.getPrevNode().setNextNode(node.getNextNode());
-        node.getNextNode().setPrevNode(node.getPrevNode());
+        node.getPrev().setNext(node.getNext());
+        node.getNext().setPrev(node.getPrev());
 
         return node.getElement();
     }
@@ -203,12 +207,12 @@ public class DLL<E> {
     public void forEach(Consumer<? super E> action) throws ArrayIndexOutOfBoundsException {
         try{
             Objects.requireNonNull(action);
-            Node<E> currentNode = this.header.getNextNode();
+            Node<E> currentNode = this.header.getNext();
 
-            if (this.size > 0) {
+            if (this.sz > 0) {
                 while (currentNode.hasNext()) {
                     action.accept(currentNode.getElement());
-                    currentNode = currentNode.getNextNode();
+                    currentNode = currentNode.getNext();
                 }
             } else {
                 throw new ArrayIndexOutOfBoundsException("List is empty");
