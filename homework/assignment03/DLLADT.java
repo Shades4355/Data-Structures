@@ -1,17 +1,17 @@
-package homework.assignment03;
 
 // File name:   DLLADT.java
 //              (Doubly Linked List Abstract Data Type)
 // Written by:  Shades Meyers
 // Description: A Doubly Linked List interface
 // Challenges:  
-// Time Spent:  6 min
+// Time Spent:  7 min
 //
 // Revision history:
 // Date:        By:     Action:
 // -------------------------------
 // 2024-July-18 SM      File created
-// 2024-July-19 SM      Changed add() return type to boolean
+// 2024-July-19 SM      Methods declared based on text
+//                          book's ADT
 
 
 public interface DLLADT<E> {
@@ -19,7 +19,6 @@ public interface DLLADT<E> {
     public boolean isEmpty();
 
     // insertion methods
-    public boolean add(E element);
     public void addFirst(E element);
     public void addLast(E element);
 
@@ -30,5 +29,4 @@ public interface DLLADT<E> {
     // peek
     public E first();
     public E last();
-    public E get(int index);
 }
