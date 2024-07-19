@@ -5,12 +5,13 @@ package homework.assignment03;
 // Written by:  Shades Meyers
 // Description: A Doubly Linked List interface
 // Challenges:  
-// Time Spent:  5 min
+// Time Spent:  6 min
 //
 // Revision history:
 // Date:        By:     Action:
 // -------------------------------
 // 2024-July-18 SM      File created
+// 2024-July-19 SM      Changed add() return type to boolean
 
 
 public interface DLLADT<E> {
@@ -18,7 +19,7 @@ public interface DLLADT<E> {
     public boolean isEmpty();
 
     // insertion methods
-    public void add(E element);
+    public boolean add(E element);
     public void addFirst(E element);
     public void addLast(E element);
 
