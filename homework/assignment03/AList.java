@@ -4,7 +4,7 @@
 // Challenges:  add(index, element) failing for non-obvious
 //                  reasons. Something along the action chain 
 //                  is returning a null value when it shouldn't
-// Time Spent:  2 h 13 min
+// Time Spent:  2 h 15 min
 //
 // Revision history:
 // Date:        By:     Action:
@@ -66,6 +66,15 @@ public class AList<E> implements AListADT<E> {
         // has next
         public boolean hasNext() {
             return this.getNext() != null;
+        }
+
+        // Implementation of a toString() method
+        @Override
+        public String toString() {
+            StringBuilder string = new StringBuilder();
+            string.append(this.getElement());
+            
+            return new String(string);
         }
     } // end Node private class
     
