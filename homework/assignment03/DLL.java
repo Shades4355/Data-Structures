@@ -4,7 +4,7 @@ package homework.assignment03;
 // Written by:  Shades Meyers
 // Description: A Doubly Linked List
 // Challenges:  
-// Time Spent:  41 min + 
+// Time Spent:  42 min + 
 //
 // Revision history:
 // Date:        By:     Action:
@@ -34,14 +34,14 @@ public class DLL<E> {
 
         // Accessors & Mutators
         @Override // implement Position interface's getElement()
-        public E getElement() {
+        public E getElement() throws IllegalStateException {
+            if (nextNode == null) {
+                throw new IllegalStateException("Position no longer valid");
+            }
             return this.element;
         }
 
-        public void setElement(E element) throws IllegalStateException {
-            if (this.getNextNode() == null) {
-                throw new IllegalStateException("Position no longer valid");
-            }
+        public void setElement(E element) {
             this.element = element;
         }
 
