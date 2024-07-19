@@ -1,4 +1,3 @@
-package homework.assignment03;
 
 // Program Description:  The program will implement an Index-based List with a Node based Singly Linked List.
 // File name: ListTester2.java (List client)

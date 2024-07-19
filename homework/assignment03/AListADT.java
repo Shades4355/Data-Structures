@@ -1,4 +1,3 @@
-package homework.assignment03;
 
 // Program Description:  The program will implement a structure similar to Java's ArrayList,  
 // but using a Node based Doubly Linked List.
