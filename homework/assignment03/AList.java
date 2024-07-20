@@ -4,7 +4,8 @@
 // Challenges:  add(index, element) failing for non-obvious
 //                  reasons. Something along the action chain 
 //                  is returning a null value when it shouldn't
-// Time Spent:  2 h 15 min
+//                  (Had >= instead of <= in a for loop; oops)
+// Time Spent:  3 h 19 min
 //
 // Revision history:
 // Date:        By:     Action:
@@ -14,7 +15,9 @@
 //                      Began filling out methods
 //                      Added a modified forEach method for use
 //                          in the toString method
-//                      First run of integer test file
+//                      First run of Integer test file
+//                      Passed Integer test after some adjustments
+//                      First run of Person test file - passes
 
 
 import java.util.Objects;
@@ -47,7 +50,7 @@ public class AList<E> implements AListADT<E> {
             this.element = element;
         }
 
-        // Next
+        // Return the next node
         public Node<E> getNext() {
             return this.nextNode;
         }
@@ -55,7 +58,7 @@ public class AList<E> implements AListADT<E> {
             this.nextNode = nextNode;
         }
 
-        // Previous
+        // Return the previous node
         public Node<E> getPrev() {
             return this.prevNode;
         }
@@ -63,7 +66,7 @@ public class AList<E> implements AListADT<E> {
             this.prevNode = prevNode;
         }
 
-        // has next
+        // Returns true if the node in question has a next node
         public boolean hasNext() {
             return this.getNext() != null;
         }
@@ -83,7 +86,7 @@ public class AList<E> implements AListADT<E> {
     private Node<E> header;
     private Node<E> trailer;
 
-    // Constructor
+    // Constructors
     AList() {
         header = new Node<E>(null, null, null);
         trailer = new Node<E>(null, header, null);
@@ -194,15 +197,17 @@ public class AList<E> implements AListADT<E> {
         Node<E> node = findNode(index);
         return this.remove(node);
     }
-    // Removes the specified node
+    // Removes a specified node
+    //Returns: the element of the removed node
     private E remove(Node<E> node) {
-        node.getPrev().setNext(node.getNext());
+        E nodeElement = node.getElement();
         node.getNext().setPrev(node.getPrev());
+        node.getPrev().setNext(node.getNext());
         node.setNext(null);
         node.setPrev(null);
         this.sz--;
 
-        return node.getElement();
+        return nodeElement;
     }
     // Removes the first occurrence of the specified element from this list, if it
     // is present.
@@ -213,7 +218,6 @@ public class AList<E> implements AListADT<E> {
             currentNode = currentNode.getNext();
             if (currentNode.getElement() == element) {
                 remove(currentNode);
-                this.sz--;
                 return true;
             }
         }
@@ -261,10 +265,9 @@ public class AList<E> implements AListADT<E> {
     private Node<E> findNode(int index) throws IndexOutOfBoundsException{
         if (validateIndex(index)) {
             Node<E> currentNode = this.header;
-            for (int i = 0; i >= index; i++) {
+            for (int i = 0; i <= index; i++) {
                 currentNode = currentNode.getNext();
             }
-
             return currentNode;
         }
         return null;
