@@ -1,32 +1,25 @@
+/** Program: DLL project
+Written by: Julia Kelly
+Program Description: interface for DLL 
+Challenges: N/A
+Time Spent: 1 min
 
-// File name:   DLLADT.java
-//              (Doubly Linked List Abstract Data Type)
-// Written by:  Shades Meyers
-// Description: A Doubly Linked List interface
-// Challenges:  
-// Time Spent:  7 min
-//
-// Revision history:
-// Date:        By:     Action:
-// -------------------------------
-// 2024-July-18 SM      File created
-// 2024-July-19 SM      Methods declared based on text
-//                          book's ADT
+Revision Log
+Date:                   By:                  Action:
+---------------------------------------------------
+7/25/2020      			jk                   initial creation of file
+9/9/2021				jk					 edited description
 
+**/
 
 public interface DLLADT<E> {
-    public int size();
-    public boolean isEmpty();
 
-    // insertion methods
-    public void addFirst(E element);
-    public void addLast(E element);
-
-    // removal methods
-    public E removeFirst();
-    public E removeLast();
-
-    // peek
-    public E first();
-    public E last();
+	abstract void addFirst(E data);	
+	abstract void addLast(E data);
+	abstract E first() ;
+	abstract E last();
+	abstract int size() ;
+	abstract E removeFirst() ;	
+	abstract E removeLast() ;
+	abstract boolean isEmpty() ;
 }
