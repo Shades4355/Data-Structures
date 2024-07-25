@@ -2,7 +2,7 @@
 // Written by:  Shades Meyers
 // Description: A list based Map
 // Challenges:  Removal logic makes my head spin
-// Time Spent:  4 h 05 minutes
+// Time Spent:  4 h 10 minutes
 //
 // Revision history:
 // Date:        By:     Action:
@@ -117,6 +117,8 @@ public class Tree<E, T> {
         return this.remove(this.get(index));
     }
     public Pairs<E, T> remove(Node<E, T> node) {
+
+        // TODO: find lowest non-leaf for movement
         Pairs<E, T> nodeElement = node.getElement();
         Node<E, T> oldParent = node.getParent();
         Node<E, T> oldLeftChild = node.getLeftChild();
@@ -130,12 +132,14 @@ public class Tree<E, T> {
             } else if (oldLeftChild != null) {
                 // If node has a leftChild,
                 // oldLeftChild takes the place of node...
-                oldLeftChild.setParent(oldParent);
-                oldParent.setRightChild(oldLeftChild);
-                // oldLeftChild's (old) rightChild becomes oldLeftChild's
-                //  (new) rightChild's leftChild
-                Node<E, T> oldLeftChildRight = oldLeftChild.getRightChild();
                 // TODO: figure out this logic
+                Node<E, T> curNode = node;
+                while (!curNode.getLeftChild().isLeaf()) {
+                    curNode = curNode.getLeftChild();
+                }
+                // move curNode to node's position
+                // set curNode's parent to oldParent
+                
 
             }
         } else {
