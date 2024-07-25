@@ -2,7 +2,7 @@
 // Written by: Shades Meyers
 // Description: A Node a public Pairs as its element
 // Challenges:
-// Time Spent: 35 minutes
+// Time Spent: 55 minutes ( - )
 //
 // Revision history:
 // Date:        By:     Action:
@@ -13,7 +13,7 @@
 
 import java.util.ArrayList;
 
-public class Node<E, T> {
+public class Node<E, T> implements Comparable<Pairs<E, T>> {
     // Variables
     private Pairs<E, T> element;
     private Node<E, T> parent, leftChild, rightChild;
@@ -69,7 +69,6 @@ public class Node<E, T> {
     public Pairs<E, T> getElement() {
         return this.element;
     }
-
     public Pairs<E, T> setElement(Pairs<E, T> element) {
         Pairs<E, T> oldElement = this.element;
         this.element = element;
@@ -81,11 +80,9 @@ public class Node<E, T> {
     public boolean isRoot() {
         return this.parent == null;
     }
-
     public boolean isLeaf() {
         return this.leftChild == null && this.rightChild == null;
     }
-
     // Returns true if there is another node in in-order traversal sequence
     public boolean hasNext() {
         if (!this.isLeaf()) {
@@ -114,41 +111,46 @@ public class Node<E, T> {
             return false;
         }
     }
-    public Node<E, T> next() {
-        if (!this.getRightChild().isLeaf()) {
-            return this.getRightChild();
-        }
+    public Node<E, T> next() { // In Order Traversal
+        // TODO: finish
+        // if (!this.getLeftChild().isLeaf()) {
+        //     return this.getLeftChild();
+        // }
         
-        if (!this.isRoot()) {
-            if (this.getParent().getChildren().indexOf(this) == 0) {
-                return this.getParent();
-            }
+        // if (!this.isRoot()) {
+        //     if (this.getParent().getChildren().indexOf(this) == 0) {
+        //         return this.getParent();
+        //     }
 
-            Node<E, T> parent = this.getParent();
-            if (parent.getParent().getChildren().indexOf(parent) == 0) {
-                return parent.getParent();
-            }
-        } 
+        //     Node<E, T> parent = this.getParent();
+        //     if (parent.getParent().getChildren().indexOf(parent) == 0) {
+        //         return parent.getParent();
+        //     }
+        // } 
         
-        return null;
+        // return null;
     }
 
-    public E getKey() {
-        return this.element.getKey();
-    }
+    public E getKey() { return this.getElement().getKey(); }
+    public T getValue() { return this.getElement().getValue(); }
+    public void setValue(T val) { this.getElement().setValue(val); }
 
     // Overrides
-    // To String
-    @Override
-    public String toString() {
-        return new String(new StringBuilder().append(this.element));
-    }
-
-    // Equals
+    // Comparisons
     public boolean equals(Node<E, T> val2) {
         Node<E, T> val1 = this;
 
         return val1.getElement() == val2.getElement();
+    }
+    @Override
+    public int compareTo(Pairs<E, T> element) {
+        return this.getElement().compareTo(element);
+    }
+
+    // To String
+    @Override
+    public String toString() {
+        return new String(new StringBuilder().append(this.element));
     }
 
 } // end Node

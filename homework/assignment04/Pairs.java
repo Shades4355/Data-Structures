@@ -49,8 +49,8 @@ public class Pairs<E, T> implements Comparable<E> {
     public boolean equals(Pairs<E, T> val2) {
         return this.getKey() == val2.getKey() && this.getValue() == val2.getValue();
     }
-    public int compareTo(Pairs<E, T> element2) {
-        return this.compareTo(element2.getKey());
+    public int compareTo(Pairs<E, T> element) {
+        return this.compareTo(element.getKey());
     }
     public int compareTo(E key2) {
         E key1 = this.getKey();

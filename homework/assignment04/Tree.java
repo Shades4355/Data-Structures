@@ -2,7 +2,7 @@
 // Written by:  Shades Meyers
 // Description: A list based Map
 // Challenges:  Removal logic makes my head spin
-// Time Spent:  4 h 10 minutes
+// Time Spent:  4 h 10 minutes + (18:15 - )
 //
 // Revision history:
 // Date:        By:     Action:
@@ -55,18 +55,22 @@ public class Tree<E, T> {
         Node<E, T> newNode = new Node<>(element, null);
         if (this.root == null ) {
             this.root = newNode;
+            this.size++;
+            return true;
         } else {
             ArrayList<Node<E, T>> nodesAround = findBetween(newNode, this.getRoot());
 
-            this.addBetween(newNode, nodesAround.get(0), nodesAround.get(1));
+            if (nodesAround != null) {
+                this.addBetween(newNode, nodesAround.get(0), nodesAround.get(1))
+                this.size ++;
+                return true;
+            }
         }
-        this.size++;
-
-        return true;
+        return false;
     }
 
     // Find Parent and Child nodes for a given new node
-    private ArrayList<Node<E, T>> findBetween(Node<E, T> node, Node<E, T> curNode) {
+    private ArrayList<Node<E, T>> findBetween(Node<E, T> node, Node<E, T> curNode) { // O(log n)
         ArrayList<Node<E, T>> retList = new ArrayList<Node<E, T>>();
         Pairs<E, T> nodeElement = node.getElement();
         Pairs<E, T> curElement = curNode.getElement();
@@ -107,69 +111,153 @@ public class Tree<E, T> {
     public T setNode(Node<E, T> oldNode, Node<E, T> newNode) {
         T retVal = oldNode.getElement().getValue();
 
-        oldNode.getElement().setValue(newNode.getElement().getValue());
+        oldNode.setValue(newNode.getValue());
 
         return retVal;
     }
     
     // Removal
-    public Pairs<E, T> remove(int index) {
+    public Pairs<E, T> remove(int index) { // should run O(h)
         return this.remove(this.get(index));
     }
     public Pairs<E, T> remove(Node<E, T> node) {
-
-        // TODO: find lowest non-leaf for movement
         Pairs<E, T> nodeElement = node.getElement();
-        Node<E, T> oldParent = node.getParent();
+        Node<E, T> parent = node.getParent();
         Node<E, T> oldLeftChild = node.getLeftChild();
         Node<E, T> oldRightChild = node.getRightChild();
 
-        if (nodeElement.compareTo(oldParent.getElement()) == 1) {
+        if (nodeElement.compareTo(parent.getElement()) == 1) {
             // If node is a rightChild of parent...
             if (oldLeftChild.isLeaf() && oldRightChild.isLeaf()) {
                 // If node has only leaves...
-                oldParent.setRightChild(new Node<E, T>(null, oldParent));
-            } else if (oldLeftChild != null) {
+                parent.setRightChild(new Node<E, T>(null, parent));
+
+            } else if (!oldLeftChild.isLeaf()) {
                 // If node has a leftChild,
                 // oldLeftChild takes the place of node...
-                // TODO: figure out this logic
                 Node<E, T> curNode = node;
                 while (!curNode.getLeftChild().isLeaf()) {
                     curNode = curNode.getLeftChild();
                 }
                 // move curNode to node's position
-                // set curNode's parent to oldParent
-                
-
-            }
-        } else {
+                // set curNode's parent to parent
+                curNode.setParent(parent);
+                if (!curNode.getRightChild().isLeaf()) {
+                    if (curNode != oldLeftChild) {
+                        // test for scenario where curNode is oldLeftNode
+                        curNode.setLeftChild(oldLeftChild);
+                        oldLeftChild.setParent(curNode);
+                    } else {
+                        curNode.setLeftChild(new Node<E, T>(null, curNode, null, null));
+                    }
+                    
+                    curNode.setRightChild(oldRightChild);
+                    oldRightChild.setParent(curNode);
+                } else {
+                    // find curNode's right child's new parent
+                    Node<E, T> receiver = curNode.getParent().getRightChild();
+                    while (!receiver.getLeftChild().isLeaf()) {
+                        receiver = receiver.getLeftChild();
+                    }
+                    Node<E, T> moving = curNode.getRightChild();
+                    receiver.setLeftChild(moving);
+                    moving.setParent(receiver);
+                }
+            } else { // If node has no leftChild
+                Node<E, T> receiver = parent.getRightChild();
+                while (!receiver.getLeftChild().isLeaf()) {
+                    receiver = receiver.getLeftChild();
+                }
+                oldRightChild.setParent(receiver);
+                receiver.setLeftChild(oldRightChild);
+            } 
+        } else if (nodeElement.compareTo(parent.getElement()) == -1) { // mirror of when node is a rightChild of parent
             // If node is a leftChild of parent...
             if (oldLeftChild.isLeaf() && oldRightChild.isLeaf()) {
                 // If node has only leaves...
-                oldParent.setLeftChild(new Node<E, T>(null, oldParent));
-            } else if (oldRightChild != null) {
+                parent.setLeftChild(new Node<E, T>(null, parent));
+            } else if (!oldRightChild.isLeaf()) {
                 // If node has a rightChild...
-                // TODO: flesh out this bit
-            }
+                Node<E, T> curNode = node;
+                while(!curNode.getRightChild().isLeaf()) {
+                    curNode = curNode.getRightChild();
+                }
+                curNode.setParent(parent);
+                if (!curNode.getLeftChild().isLeaf()) {
+                    if (curNode != oldRightChild) {
+                        curNode.setRightChild(oldRightChild);
+                        oldRightChild.setParent(curNode);
+                    } else {
+                        curNode.setRightChild(new Node<E, T>(null, curNode, null, null));
+                    }
 
-            // Garbage collection help
-            node.setParent(null);
-            node.setElement(null);
-            node.setLeftChild(null);
-            node.setRightChild(null);
+                    curNode.setLeftChild(oldLeftChild);
+                    oldLeftChild.setParent(curNode);
+                } else {
+                    Node<E, T> receiver = curNode.getParent().getLeftChild();
+                    while(!receiver.getRightChild().isLeaf()) {
+                        receiver = receiver.getRightChild();
+                    }
+                    Node<E, T> moving = curNode.getLeftChild();
+                    receiver.setRightChild(moving);
+                    moving.setParent(receiver);
+                }
+            } else {
+                Node<E, T> receiver = parent.getLeftChild();
+                while (!receiver.getRightChild().isLeaf()) {
+                    receiver = receiver.getRightChild();
+                }
+                oldLeftChild.setParent(receiver);
+                receiver.setRightChild(oldLeftChild);
+            }
+        } else { // node == root
+            // treat as rightChild deletion, but moved node becomes root
+            // If node is a rightChild of parent...
+            if (oldLeftChild.isLeaf() && oldRightChild.isLeaf()) {
+                // If root has only leaves...
+                this.root = null;
+            } else if (!oldLeftChild.isLeaf()) {
+                // If root has a leftChild...
+                Node<E, T> curNode = node;
+                while (!curNode.getLeftChild().isLeaf()) {
+                    curNode = curNode.getLeftChild();
+                }
+                curNode.setParent(null);
+                if (!curNode.getRightChild().isLeaf()) {
+                    if (curNode != oldLeftChild) {
+                        curNode.setLeftChild(oldLeftChild);
+                        oldLeftChild.setParent(curNode);
+                    } else {
+                        curNode.setLeftChild(new Node<E, T>(null, curNode, null, null));
+                    }
+                    curNode.setRightChild(oldRightChild);
+                    oldRightChild.setParent(curNode);
+                } else {
+                    Node<E, T> receiver = curNode.getParent().getRightChild();
+                    while (!receiver.getLeftChild().isLeaf()) {
+                        receiver = receiver.getLeftChild();
+                    }
+                    Node<E, T> moving = curNode.getRightChild();
+                    receiver. setLeftChild(moving);
+                    moving.setParent(receiver);
+                }
+            } else {
+                // If root has no leftChild
+                this.root = oldRightChild;
+                oldRightChild.setParent(null);
+            }
         }
 
-        this.size--;
-    }
-    
-    // Recursive upward movement
-    // private boolean moveSubtree(Node<E, T> node) {
-    //     Node<E, T> oldNode = node;
+        // Garbage collection help
+        node.setParent(null);
+        node.setElement(null);
+        node.setLeftChild(null);
+        node.setRightChild(null);
 
-    //     if (node == null) {
-    //         return false;
-    //     } else if (node.getElement().compareTo(node.getParent()) == ) {}
-    // }
+        this.size--;
+
+        return nodeElement;
+    }
 
     // Query Methods
     public int size() { return this.size; }
