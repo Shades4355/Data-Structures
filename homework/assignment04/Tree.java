@@ -2,27 +2,28 @@
 // Written by:  Shades Meyers
 // Description: A list based Map
 // Challenges:  Removal logic makes my head spin
-// Time Spent:  3 h 35 minutes
+// Time Spent:  4 h 05 minutes
 //
 // Revision history:
 // Date:        By:     Action:
 // -------------------------------
 // 2024-July-24 SM      File created
+// 2024-July-25 SM      Con't work on removal logic
 
 
 import java.util.ArrayList;
 
-public class Map<E, T> {
+public class Tree<E, T> {
     // Variables
     private Node<E, T> root;
     private int size;
 
     // Constructors
-    Map(Pairs<E, T> element) {
+    Tree(Pairs<E, T> element) {
         this.root = new Node<E, T>(element, null);
         this.size = 1;
     }
-    Map() {
+    Tree() {
         this.root = null;
         this.size = 0;
     }
@@ -49,14 +50,17 @@ public class Map<E, T> {
         } else {
             parent.setRightChild(node);
         }
-
-        this.size++;
     }
     public boolean add(Pairs<E, T> element) {
         Node<E, T> newNode = new Node<>(element, null);
-        ArrayList<Node<E, T>> nodesAround = findBetween(newNode, this.getRoot());
+        if (this.root == null ) {
+            this.root = newNode;
+        } else {
+            ArrayList<Node<E, T>> nodesAround = findBetween(newNode, this.getRoot());
 
-        this.addBetween(newNode, nodesAround.get(0), nodesAround.get(1));
+            this.addBetween(newNode, nodesAround.get(0), nodesAround.get(1));
+        }
+        this.size++;
 
         return true;
     }
@@ -123,13 +127,14 @@ public class Map<E, T> {
             if (oldLeftChild.isLeaf() && oldRightChild.isLeaf()) {
                 // If node has only leaves...
                 oldParent.setRightChild(new Node<E, T>(null, oldParent));
-                node.setParent(null);
             } else if (oldLeftChild != null) {
                 // If node has a leftChild,
                 // oldLeftChild takes the place of node...
                 oldLeftChild.setParent(oldParent);
                 oldParent.setRightChild(oldLeftChild);
-                // oldLeftChild's (old) rightChild becomes oldLeftChild's (new) rightChild's leftChild
+                // oldLeftChild's (old) rightChild becomes oldLeftChild's
+                //  (new) rightChild's leftChild
+                Node<E, T> oldLeftChildRight = oldLeftChild.getRightChild();
                 // TODO: figure out this logic
 
             }
@@ -138,12 +143,16 @@ public class Map<E, T> {
             if (oldLeftChild.isLeaf() && oldRightChild.isLeaf()) {
                 // If node has only leaves...
                 oldParent.setLeftChild(new Node<E, T>(null, oldParent));
-                node.setParent(null);
             } else if (oldRightChild != null) {
                 // If node has a rightChild...
                 // TODO: flesh out this bit
             }
 
+            // Garbage collection help
+            node.setParent(null);
+            node.setElement(null);
+            node.setLeftChild(null);
+            node.setRightChild(null);
         }
 
         this.size--;

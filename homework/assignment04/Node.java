@@ -2,12 +2,13 @@
 // Written by: Shades Meyers
 // Description: A Node a public Pairs as its element
 // Challenges:
-// Time Spent: 15 minutes
+// Time Spent: 35 minutes
 //
 // Revision history:
-// Date: By: Action:
+// Date:        By:     Action:
 // -------------------------------
-// 2024-July-24 SM File created
+// 2024-July-24 SM      File created
+// 2024-July-25 SM      Added "next" method
 
 
 import java.util.ArrayList;
@@ -112,6 +113,24 @@ public class Node<E, T> {
         } else {
             return false;
         }
+    }
+    public Node<E, T> next() {
+        if (!this.getRightChild().isLeaf()) {
+            return this.getRightChild();
+        }
+        
+        if (!this.isRoot()) {
+            if (this.getParent().getChildren().indexOf(this) == 0) {
+                return this.getParent();
+            }
+
+            Node<E, T> parent = this.getParent();
+            if (parent.getParent().getChildren().indexOf(parent) == 0) {
+                return parent.getParent();
+            }
+        } 
+        
+        return null;
     }
 
     public E getKey() {
