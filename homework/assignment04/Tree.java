@@ -2,7 +2,7 @@
 // Written by:  Shades Meyers
 // Description: A list based Map
 // Challenges:  Removal logic makes my head spin
-// Time Spent:  4 h 10 minutes + (18:15 - )
+// Time Spent:  5 h 33 minutes
 //
 // Revision history:
 // Date:        By:     Action:
@@ -61,7 +61,7 @@ public class Tree<E, T> {
             ArrayList<Node<E, T>> nodesAround = findBetween(newNode, this.getRoot());
 
             if (nodesAround != null) {
-                this.addBetween(newNode, nodesAround.get(0), nodesAround.get(1))
+                this.addBetween(newNode, nodesAround.get(0), nodesAround.get(1));
                 this.size ++;
                 return true;
             }
