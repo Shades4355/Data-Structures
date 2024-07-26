@@ -55,14 +55,16 @@ public class Pairs<E, T> implements Comparable<E> {
     public int compareTo(E key2) {
         E key1 = this.getKey();
 
-        if (key2 == null) {
-            throw new NullPointerException();
-        } else if (key1 > key2) {
-            return 1;
-        } else if (key1 == key2) {
-            return 0;
-        } else {
-            return -1;
-        }
+        return key1.toString().compareTo(key2.toString());
+
+        // if (key2 == null) {
+        //     throw new NullPointerException();
+        // } else if (key1 > key2) {
+        //     return 1;
+        // } else if (key1 == key2) {
+        //     return 0;
+        // } else {
+        //     return -1;
+        // }
     }
 } // end Pairs
