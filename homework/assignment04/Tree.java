@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class Tree<E, T> {
+public class Tree<E extends Comparable<E>, T> {
     // Variables
     private Node<E, T> root;
     private int size;
@@ -59,7 +59,7 @@ public class Tree<E, T> {
         }
     }
     public boolean add(Pairs<E, T> element) {
-        Node<E, T> newNode = new Node<>(element, null);
+        Node<E, T> newNode = new Node<E, T>(element, null);
         if (this.getRoot() == null ) {
             this.root = newNode;
             this.size++;
@@ -112,9 +112,9 @@ public class Tree<E, T> {
         Node<E, T> leftChild = curNode.getLeftChild();
         Node<E, T> rightChild = curNode.getRightChild();
 
-        // TODO: fix compareTo
-        if (nodeElement.compareTo(curElement) == 0) {
-            // If curNode == node, change curNode's value to node's value
+        // TODO: find logic error?
+        if (searchNode.compareTo(curNode) == 0) {
+            // If curNode equals searchNode, change curNode's value to searchNode's value
             this.setNode(curNode, searchNode);
             return null;
         }
@@ -171,7 +171,7 @@ public class Tree<E, T> {
     private T setNode(Node<E, T> oldNode, Node<E, T> newNode) {
         T retVal = oldNode.getElement().getValue();
 
-        oldNode.setValue(newNode.getValue());
+        oldNode.setValue(oldNode.getValue() + newNode.getValue());
 
         return retVal;
     }
