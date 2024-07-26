@@ -30,6 +30,9 @@ public class TestDriver {
         // expected outcome:
         // {{Arrows: 10}, {Bombs: 4}, {Healing Potions: 3}}
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-        
+        inventory.add("Arrows", 15);
+        System.out.println(inventory);
+        // expected outcome:
+        // {{Arrows: 15}, {Bombs: 4}, {Healing Potions: 3}}
     } // end main method
 } // end program
