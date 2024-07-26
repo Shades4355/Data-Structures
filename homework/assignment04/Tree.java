@@ -2,16 +2,19 @@
 // Written by:  Shades Meyers
 // Description: A list based Map
 // Challenges:  Removal logic makes my head spin
-// Time Spent:  5 h 33 minutes
+// Time Spent:  5 h 52 minutes
 //
 // Revision history:
 // Date:        By:     Action:
 // -------------------------------
 // 2024-July-24 SM      File created
 // 2024-July-25 SM      Con't work on removal logic
+//                      Added forEach method
 
 
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 public class Tree<E, T> {
     // Variables
@@ -68,7 +71,10 @@ public class Tree<E, T> {
         }
         return false;
     }
-
+    public boolean add(E key, T value) {
+        return this.add(new Pairs<E, T>(key, value));
+    }
+    
     // Find Parent and Child nodes for a given new node
     private ArrayList<Node<E, T>> findBetween(Node<E, T> node, Node<E, T> curNode) { // O(log n)
         ArrayList<Node<E, T>> retList = new ArrayList<Node<E, T>>();
@@ -108,7 +114,7 @@ public class Tree<E, T> {
     } // end findBetween
 
     // Set Method
-    public T setNode(Node<E, T> oldNode, Node<E, T> newNode) {
+    private T setNode(Node<E, T> oldNode, Node<E, T> newNode) {
         T retVal = oldNode.getElement().getValue();
 
         oldNode.setValue(newNode.getValue());
@@ -264,11 +270,15 @@ public class Tree<E, T> {
     public boolean isEmpty() { return this.size == 0; }
     private Node<E, T> getRoot() { return this.root; }
     private Node<E, T> get(int index) {
+        // TODO: figure out node.next() logic
         ArrayList<Node<E, T>> flatTree = iterable(root);
 
         return flatTree.get(index);
     }
     public int indexOf(Node<E, T> node) {
+        // TODO: figure out node.next() logic
+        // replace flatTree with a while loop
+        // still O(n), but smaller
         ArrayList<Node<E, T>> flatTree = iterable(root);
 
         return flatTree.indexOf(node);
@@ -303,6 +313,24 @@ public class Tree<E, T> {
 
         return nodeList;
     }
+    public void forEach(Consumer<? super Pairs<E, T>> action) {
+        try {
+            Objects.requireNonNull(action);
+            // TODO: figure out node.next()
+            ArrayList<Pairs<E, T>> flatTree = this.iterator();
+            if (this.size() > 0) {
+                for (Pairs<E, T> element : flatTree) {
+                    action.accept(element);
+                }
+            } else {
+                throw new ArrayIndexOutOfBoundsException("AList is empty");
+            }
+        } catch (NullPointerException e) {
+            System.err.println(e);
+        } catch (ArrayIndexOutOfBoundsException f) {
+            System.err.println(f);
+        }
+    }
 
     // To String Method
     @Override
@@ -311,9 +339,9 @@ public class Tree<E, T> {
         ArrayList<Pairs<E, T>> list = iterator();
 
         string.append("{");
-        for (Pairs<E, T> node : list) {
-            string.append(node);
-            if (list.indexOf(node) > list.size()) {
+        for (Pairs<E, T> element : list) {
+            string.append(element);
+            if (list.indexOf(element) > list.size()) {
                 string.append(", ");
             }
         }
