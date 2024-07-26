@@ -2,7 +2,7 @@
 // Written by: Shades Meyers
 // Description: A Node a public Pairs as its element
 // Challenges:
-// Time Spent: 55 minutes ( - )
+// Time Spent: 55 minutes + ( - )
 //
 // Revision history:
 // Date:        By:     Action:
@@ -111,25 +111,25 @@ public class Node<E, T> implements Comparable<Pairs<E, T>> {
             return false;
         }
     }
-    public Node<E, T> next() { // In Order Traversal
-        // TODO: finish
-        // if (!this.getLeftChild().isLeaf()) {
-        //     return this.getLeftChild();
-        // }
+    // public Node<E, T> next() { // In Order Traversal
+    //     // TODO: finish
+    //     // if (!this.getLeftChild().isLeaf()) {
+    //     //     return this.getLeftChild();
+    //     // }
         
-        // if (!this.isRoot()) {
-        //     if (this.getParent().getChildren().indexOf(this) == 0) {
-        //         return this.getParent();
-        //     }
+    //     // if (!this.isRoot()) {
+    //     //     if (this.getParent().getChildren().indexOf(this) == 0) {
+    //     //         return this.getParent();
+    //     //     }
 
-        //     Node<E, T> parent = this.getParent();
-        //     if (parent.getParent().getChildren().indexOf(parent) == 0) {
-        //         return parent.getParent();
-        //     }
-        // } 
+    //     //     Node<E, T> parent = this.getParent();
+    //     //     if (parent.getParent().getChildren().indexOf(parent) == 0) {
+    //     //         return parent.getParent();
+    //     //     }
+    //     // } 
         
-        // return null;
-    }
+    //     // return null;
+    // }
 
     public E getKey() { return this.getElement().getKey(); }
     public T getValue() { return this.getElement().getValue(); }
