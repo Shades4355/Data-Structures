@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class Tree<E, T> {
+public class Tree<E extends Comparable<E>, T> {
     // Variables
     private Node<E, T> root;
     private int size;
@@ -61,7 +61,7 @@ public class Tree<E, T> {
         }
     }
     public boolean add(Pairs<E, T> element) {
-        Node<E, T> newNode = new Node<>(element, null);
+        Node<E, T> newNode = new Node<E, T>(element, null);
         if (this.getRoot() == null ) {
             this.root = newNode;
             this.size++;
@@ -178,7 +178,7 @@ public class Tree<E, T> {
     private T setNode(Node<E, T> oldNode, Node<E, T> newNode) {
         T retVal = oldNode.getElement().getValue();
 
-        oldNode.setValue(newNode.getValue());
+        oldNode.setValue(oldNode.getValue() + newNode.getValue());
 
         return retVal;
     }

@@ -13,7 +13,7 @@
 
 import java.util.ArrayList;
 
-public class Node<E, T> implements Comparable<Pairs<E, T>> {
+public class Node<E extends Comparable<E>, T> implements Comparable<Pairs<E, T>> {
     // Variables
     private Pairs<E, T> element;
     private Node<E, T> parent, leftChild, rightChild;
@@ -25,7 +25,6 @@ public class Node<E, T> implements Comparable<Pairs<E, T>> {
         this.leftChild = leftChild;
         this.rightChild = rightChild;
     }
-
     Node(Pairs<E, T> element, Node<E, T> parent) {
         this.element = element;
         this.parent = parent;
