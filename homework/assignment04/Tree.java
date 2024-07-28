@@ -2,7 +2,7 @@
 // Written by:  Shades Meyers
 // Description: A list based Map
 // Challenges:  Removal logic makes my head spin
-// Time Spent:  9 h 28 minutes + (20:16 - 22:57)
+// Time Spent:  9 h 28 minutes
 //
 // Revision history:
 // Date:        By:     Action:
