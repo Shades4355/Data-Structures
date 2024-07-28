@@ -146,6 +146,9 @@ public class Node<E, T> implements Comparable<Pairs<E, T>> {
     public int compareTo(Pairs<E, T> element) {
         return this.getElement().compareTo(element);
     }
+    public int compareTo(Node<E, T> node2) {
+        return this.compareTo(node2.getElement());
+    }
 
     // To String
     @Override

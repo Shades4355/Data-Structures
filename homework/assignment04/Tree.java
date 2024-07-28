@@ -2,14 +2,16 @@
 // Written by:  Shades Meyers
 // Description: A list based Map
 // Challenges:  Removal logic makes my head spin
-// Time Spent:  6 h 47 minutes
+// Time Spent:  6 h 47 minutes + (20:16 - )
 //
 // Revision history:
 // Date:        By:     Action:
 // -------------------------------
 // 2024-July-24 SM      File created
-// 2024-July-25 SM      Con't work on removal logic
+// 2024-July-25 SM      Con't. work on removal logic
 //                      Added forEach method
+// 2024-July-27 SM      Error checking findBetween method
+//                      Fix logic flaw in addBetween method
 
 
 import java.util.ArrayList;
@@ -41,7 +43,7 @@ public class Tree<E, T> {
         child.setParent(node);
        
         if (childElement != null) {
-            // if nodeElement is greater than childElement, child becomes a leftChild of
+            // If nodeElement is greater than childElement, child becomes a leftChild of
             // node
             if (nodeElement.compareTo(childElement) == 1) {
                 node.setLeftChild(child);
@@ -112,17 +114,22 @@ public class Tree<E, T> {
         Node<E, T> leftChild = curNode.getLeftChild();
         Node<E, T> rightChild = curNode.getRightChild();
 
+        // TODO: delete
+        System.out.println("Search Node: " + nodeElement);
+        System.out.println("curElement: " + curElement);
+
         // TODO: fix compareTo
-        if (nodeElement.compareTo(curElement) == 0) {
+        if (searchNode.compareTo(curNode) == 0) {
             // If curNode == node, change curNode's value to node's value
+            System.out.println("nodes are the same!"); // TODO: delete
             this.setNode(curNode, searchNode);
             return null;
         }
 
         if (!leftChild.isLeaf() && !rightChild.isLeaf()) { // If no child is a leaf...
-            if (nodeElement.compareTo(curElement) == -1) {
+            if (nodeElement.compareTo(curElement) < 0) {
                 // If searchNode is less than curNode...
-                if (nodeElement.compareTo(leftChild.getElement()) == 1) {
+                if (nodeElement.compareTo(leftChild.getElement()) > 0) {
                     // And node is greater than leftChild...
                     retList.add(curNode);
                     retList.add(leftChild);
@@ -133,7 +140,7 @@ public class Tree<E, T> {
                 }
             } else {
                 // If node is greater than curNode
-                if (nodeElement.compareTo(rightChild.getElement()) == -1) {
+                if (nodeElement.compareTo(rightChild.getElement()) < 0) {
                     // If node is less than rightChild
                     retList.add(curNode);
                     retList.add(rightChild);
@@ -144,7 +151,7 @@ public class Tree<E, T> {
                 }
             } 
         } else { // If either child is a leaf...
-            if (nodeElement.compareTo(curElement) == -1) {
+            if (nodeElement.compareTo(curElement) < 0) {
                 // If searchNode is less than curNode...
                 if (leftChild.isLeaf()) {
                     retList.add(curNode);
@@ -371,7 +378,7 @@ public class Tree<E, T> {
         try {
             Objects.requireNonNull(action);
             // TODO: figure out node.next()
-            ArrayList<Pairs<E, T>> flatTree = this.iterator();
+            ArrayList<Pairs<E, T>> flatTree = this.iterator(); // temporary
             if (this.size() > 0) {
                 for (Pairs<E, T> element : flatTree) {
                     action.accept(element);
@@ -395,7 +402,7 @@ public class Tree<E, T> {
         string.append("{");
         for (Pairs<E, T> element : list) {
             string.append(element);
-            if (list.indexOf(element) > list.size()) {
+            if (list.indexOf(element) < list.size() - 1) {
                 string.append(", ");
             }
         }
