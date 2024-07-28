@@ -35,6 +35,21 @@ public class TestDriver {
         // expected outcome:
         // {{Arrows: 15}, {Bombs: 4}, {Healing Potions: 3}}
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        System.out.println(); // line break
         inventory.forEach((n) -> System.out.println(n));
+        System.out.println(); // line break
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        Node<String, Integer> arrows = inventory.search("Arrows");
+        inventory.add("Arrows", arrows.getValue() - 1);
+        System.out.println(inventory);
+        // expected outcome:
+        // {{Arrows: 14}, {Bombs: 4}, {Healing Potions: 3}}
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//        
+        Node<String, Integer> healPots = inventory.search("Healing Potions");
+        inventory.add("Healing Potions", healPots.getValue() - 3);
+        System.out.println(inventory);
+        // expected outcome:
+        // {{Arrows: 14}, {Bombs: 4}}
+
     } // end main method
 } // end program

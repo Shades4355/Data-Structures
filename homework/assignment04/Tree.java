@@ -2,7 +2,7 @@
 // Written by:  Shades Meyers
 // Description: A list based Map
 // Challenges:  Removal logic makes my head spin
-// Time Spent:  6 h 47 minutes + (20:16 - )
+// Time Spent:  9 h 28 minutes + (20:16 - 22:57)
 //
 // Revision history:
 // Date:        By:     Action:
@@ -12,6 +12,8 @@
 //                      Added forEach method
 // 2024-July-27 SM      Error checking findBetween method
 //                      Fix logic flaw in addBetween method
+//                      Fixed edge-case in remove(node) when 
+//                          node is the root
 
 
 import java.util.ArrayList;
@@ -82,7 +84,7 @@ public class Tree<E extends Comparable<E>, T> {
             } else if (newNode.compareTo(this.getRoot().getElement()) == -1 && this.getRoot().getLeftChild().isLeaf()) {
                 newNode.setParent(this.getRoot());
                 this.getRoot().setLeftChild(newNode);
-            } else { // TODO: double check
+            } else {
                 ArrayList<Node<E, T>> nodesAround = findBetween(newNode, this.getRoot());
 
                 if (nodesAround != null) {
@@ -114,14 +116,9 @@ public class Tree<E extends Comparable<E>, T> {
         Node<E, T> leftChild = curNode.getLeftChild();
         Node<E, T> rightChild = curNode.getRightChild();
 
-        // TODO: delete
-        System.out.println("Search Node: " + nodeElement);
-        System.out.println("curElement: " + curElement);
-
         // TODO: fix compareTo
         if (searchNode.compareTo(curNode) == 0) {
             // If curNode == node, change curNode's value to node's value
-            System.out.println("nodes are the same!"); // TODO: delete
             this.setNode(curNode, searchNode);
             return null;
         }
@@ -176,24 +173,68 @@ public class Tree<E extends Comparable<E>, T> {
 
     // Set Method
     private T setNode(Node<E, T> oldNode, Node<E, T> newNode) {
-        T retVal = oldNode.getElement().getValue();
+        T retVal = oldNode.getValue();
 
-        oldNode.setValue(oldNode.getValue() + newNode.getValue());
+        if ((int) newNode.getValue() <= 0) {
+            this.remove(oldNode);
+        } else {
+            oldNode.setValue(newNode.getValue());
+        }
 
         return retVal;
     }
     
     // Removal
-    public Pairs<E, T> remove(int index) { // should run O(h)
+    public Pairs<E, T> remove(E key) {
+        return this.remove(this.search(key));
+    }
+    public Pairs<E, T> remove(int index) {
         return this.remove(this.get(index));
     }
-    public Pairs<E, T> remove(Node<E, T> node) {
+    public Pairs<E, T> remove(Node<E, T> node) { // should run O(h)
         Pairs<E, T> nodeElement = node.getElement();
         Node<E, T> parent = node.getParent();
         Node<E, T> oldLeftChild = node.getLeftChild();
         Node<E, T> oldRightChild = node.getRightChild();
 
-        if (nodeElement.compareTo(parent.getElement()) == 1) {
+        if (node == this.getRoot()) { // node == root
+            // treat as rightChild deletion, but moved node becomes root
+            // If node is a rightChild of parent...
+            if (oldLeftChild.isLeaf() && oldRightChild.isLeaf()) {
+                // If root has only leaves...
+                this.root = null;
+            } else if (!oldLeftChild.isLeaf()) {
+                // If root has a leftChild...
+                Node<E, T> curNode = oldLeftChild;
+                while (!curNode.getRightChild().isLeaf()) {
+                    curNode = curNode.getRightChild();
+                }
+                if (curNode.compareTo(oldLeftChild) == 0) {
+                    // test for edge-case where oldLeftChild has no right child
+                    curNode.setParent(null);
+                    curNode.setRightChild(oldRightChild);
+                } else { // If curNode isn't oldLeftChild...
+                    if (!curNode.getLeftChild().isLeaf()) {
+                        Node<E, T> toMove = curNode.getLeftChild();
+                        Node<E, T> receiver = curNode.getParent().getRightChild();
+                        
+                        receiver.setLeftChild(toMove);
+                        toMove.getParent().setLeftChild(new Node<>(null, toMove.getParent()));
+                        toMove.setParent(receiver);
+                    } // no else block
+                        this.root = curNode;
+                        curNode.getParent().setRightChild(new Node<>(null, curNode.getParent()));
+                        curNode.setParent(null);
+                        oldLeftChild.setParent(curNode);
+                        oldRightChild.setParent(curNode);
+                        curNode.setLeftChild(oldLeftChild);
+                        curNode.setRightChild(oldRightChild);
+                }
+            } else { // If root has no leftChild
+                this.root = oldRightChild;
+                oldRightChild.setParent(null);
+            }
+        } else if (nodeElement.compareTo(parent.getElement()) == 1) {
             // If node is a rightChild of parent...
             if (oldLeftChild.isLeaf() && oldRightChild.isLeaf()) {
                 // If node has only leaves...
@@ -277,42 +318,6 @@ public class Tree<E extends Comparable<E>, T> {
                 oldLeftChild.setParent(receiver);
                 receiver.setRightChild(oldLeftChild);
             }
-        } else { // node == root
-            // treat as rightChild deletion, but moved node becomes root
-            // If node is a rightChild of parent...
-            if (oldLeftChild.isLeaf() && oldRightChild.isLeaf()) {
-                // If root has only leaves...
-                this.root = null;
-            } else if (!oldLeftChild.isLeaf()) {
-                // If root has a leftChild...
-                Node<E, T> curNode = node;
-                while (!curNode.getLeftChild().isLeaf()) {
-                    curNode = curNode.getLeftChild();
-                }
-                curNode.setParent(null);
-                if (!curNode.getRightChild().isLeaf()) {
-                    if (curNode != oldLeftChild) {
-                        curNode.setLeftChild(oldLeftChild);
-                        oldLeftChild.setParent(curNode);
-                    } else {
-                        curNode.setLeftChild(new Node<E, T>(null, curNode, null, null));
-                    }
-                    curNode.setRightChild(oldRightChild);
-                    oldRightChild.setParent(curNode);
-                } else {
-                    Node<E, T> receiver = curNode.getParent().getRightChild();
-                    while (!receiver.getLeftChild().isLeaf()) {
-                        receiver = receiver.getLeftChild();
-                    }
-                    Node<E, T> moving = curNode.getRightChild();
-                    receiver. setLeftChild(moving);
-                    moving.setParent(receiver);
-                }
-            } else {
-                // If root has no leftChild
-                this.root = oldRightChild;
-                oldRightChild.setParent(null);
-            }
         }
 
         // Garbage collection help
@@ -344,7 +349,18 @@ public class Tree<E extends Comparable<E>, T> {
 
         return flatTree.indexOf(node);
     }
-    
+    public Node<E, T> search(E key) { // O(n)
+        // TODO: replace with node.next() logic
+        ArrayList<Node<E, T>> flatTree = this.iterable(root);
+
+        for (Node<E, T> node : flatTree) {
+            if (node.getKey().compareTo(key) == 0) {
+                return node;
+            }
+        }
+        return null;
+    }
+
     // Iteration
     private ArrayList<Pairs<E, T>> iterator() {
         ArrayList<Pairs<E, T>> retArr = new ArrayList<Pairs<E, T>>();

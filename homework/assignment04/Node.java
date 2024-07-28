@@ -80,7 +80,7 @@ public class Node<E extends Comparable<E>, T> implements Comparable<Pairs<E, T>>
         return this.parent == null;
     }
     public boolean isLeaf() {
-        return this.leftChild == null && this.rightChild == null;
+        return this.element == null;
     }
     // Returns true if there is another node in in-order traversal sequence
     public boolean hasNext() {
