@@ -2,7 +2,7 @@
 // Written by:  Shades Meyers
 // Description: A list based Map
 // Challenges:  Removal logic makes my head spin
-// Time Spent:  9 h 28 minutes
+// Time Spent:  9 h 31 minutes
 //
 // Revision history:
 // Date:        By:     Action:
@@ -359,6 +359,21 @@ public class Tree<E extends Comparable<E>, T> {
             }
         }
         return null;
+    }
+    public boolean contains(E element) { // O(log n)
+        Node<E, T> curNode = this.root;
+        Pairs<E, T> curElement = curNode.getElement();
+
+        while (!curNode.isLeaf()) {
+            if (curElement.compareTo(element) == 0) {
+                return true;
+            } else if (curElement.compareTo(element) > 0) {
+                curNode = curNode.getLeftChild();
+            } else {
+                curNode = curNode.getRightChild();
+            }
+        }
+        return false;
     }
 
     // Iteration
