@@ -34,5 +34,7 @@ public class TestDriver {
         System.out.println(inventory);
         // expected outcome:
         // {{Arrows: 15}, {Bombs: 4}, {Healing Potions: 3}}
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        inventory.forEach((n) -> System.out.println(n));
     } // end main method
 } // end program
