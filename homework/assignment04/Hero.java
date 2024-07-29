@@ -2,7 +2,7 @@
 // Written by:  Shades Meyers
 // Description: A template for the Player
 // Challenges:  
-// Time Spent:  1 h 34 minutes
+// Time Spent:  1 h 42 minutes
 //
 // Revision history:
 // Date:        By:     Action:
@@ -14,7 +14,6 @@
 
 
 import java.util.ArrayList;
-import java.util.function.Consumer;
 import java.util.Scanner;
 
 public class Hero extends Entity {
@@ -25,16 +24,16 @@ public class Hero extends Entity {
     // Constructors
     Hero(String name) {
         super(name, 1, 10, 6, 4, 1, 2, 2);
-        this.inventory = new Tree<String, Integer>(new Pairs<String, Integer>("Bombs", 2));
-        this.inventory.add("Bow", 1);
-        this.inventory.add("Arrows", 5);
+        this.inventory = new Tree<String, Integer>(new Pairs<String, Integer>("Bow and Arrows", 5));
+        this.inventory.add("Bombs", 2);
         this.inventory.add("Healing Potions", 3);
         this.xp = 0;
     }
 
     // Methods
     // Accessors & Mutators
-        // XP
+        // Level & XP
+    public int getLevel() { return this.level; }
     public int getXP() { return this.xp; }
         // Inventory
     public void getInventory() { System.out.println(inventory); }
@@ -72,10 +71,13 @@ public class Hero extends Entity {
     // Level up
         // Level up
     public void levelUp() {
+        int bonusHP = hitDice.roll(1) + this.con;
+        this.maxHP += bonusHP;
+        this.hitPoints += bonusHP;
         System.out.println("\nLevel Up!");
         String[] availableStats = {"str", "dex", "con"};
         System.out.println("Pick a stat to increase:");
-        
+
         for (String stat : availableStats) {
             System.out.println("\t" + stat);
         }
@@ -99,11 +101,12 @@ public class Hero extends Entity {
             this.dex += 1;
         } else if (stat.equals("con")) {
             this.con += 1;
-            // TODO: update hit points and max HP
+            this.maxHP += this.level;
+            this.hitPoints += this.level;
         }
     }
         // Show Inventory
-    public void showInv(Consumer<Start> turn, Enemy enemy) {
+    public void showInv(Enemy enemy) {
         System.out.println("\nInventory:");
         inventory.forEach((n) -> {
             System.out.println(n.getKey() + ": " + n.getValue());
@@ -135,7 +138,7 @@ public class Hero extends Entity {
             }
             input.close();
         } else {
-            turn.playerTurn.accept(this, enemy);
+            Start.playerTurn(this, enemy);
         }
     }
 
