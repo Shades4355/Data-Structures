@@ -39,18 +39,6 @@ public class Pairs<E extends Comparable<E>, T> implements Comparable<E> {
         this.value = value;
     }
 
-    // Add Values
-    // public T add(T value2) {
-    //     if (value2 instanceof Integer) {
-    //         int integer1 = (int) this.getValue();
-    //         int integer2 = (int) value2;
-    //         T newVal = integer1 + integer2;
-
-    //         return newVal;
-    //     }
-    //     throw new IllegalArgumentException("Value2 must be an Integer");
-    // }
-
     // Overrides
     @Override
     public String toString() {
