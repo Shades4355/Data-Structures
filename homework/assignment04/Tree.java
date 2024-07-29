@@ -2,7 +2,7 @@
 // Written by:  Shades Meyers
 // Description: A list based Map
 // Challenges:  Removal logic makes my head spin
-// Time Spent:  9 h 31 minutes
+// Time Spent:  9 h 42 minutes
 //
 // Revision history:
 // Date:        By:     Action:
@@ -14,6 +14,7 @@
 //                      Fix logic flaw in addBetween method
 //                      Fixed edge-case in remove(node) when 
 //                          node is the root
+// 2024-July-29 SM      Fixed search() method to be O(h) instead of O(n)
 
 
 import java.util.ArrayList;
@@ -116,7 +117,6 @@ public class Tree<E extends Comparable<E>, T> {
         Node<E, T> leftChild = curNode.getLeftChild();
         Node<E, T> rightChild = curNode.getRightChild();
 
-        // TODO: fix compareTo
         if (searchNode.compareTo(curNode) == 0) {
             // If curNode == node, change curNode's value to node's value
             this.setNode(curNode, searchNode);
@@ -191,7 +191,7 @@ public class Tree<E extends Comparable<E>, T> {
     public Pairs<E, T> remove(int index) {
         return this.remove(this.get(index));
     }
-    public Pairs<E, T> remove(Node<E, T> node) { // should run O(h)
+    public Pairs<E, T> remove(Node<E, T> node) { // O(h)
         Pairs<E, T> nodeElement = node.getElement();
         Node<E, T> parent = node.getParent();
         Node<E, T> oldLeftChild = node.getLeftChild();
@@ -335,32 +335,31 @@ public class Tree<E extends Comparable<E>, T> {
     public int size() { return this.size; }
     public boolean isEmpty() { return this.size == 0; }
     private Node<E, T> getRoot() { return this.root; }
-    private Node<E, T> get(int index) {
-        // TODO: figure out node.next() logic
+    private Node<E, T> get(int index) { // O(n)
         ArrayList<Node<E, T>> flatTree = iterable(root);
 
         return flatTree.get(index);
     }
-    public int indexOf(Node<E, T> node) {
-        // TODO: figure out node.next() logic
-        // replace flatTree with a while loop
-        // still O(n), but smaller
+    public int indexOf(Node<E, T> node) { // O(n)
         ArrayList<Node<E, T>> flatTree = iterable(root);
 
         return flatTree.indexOf(node);
     }
-    public Node<E, T> search(E key) { // O(n)
-        // TODO: replace with node.next() logic
-        ArrayList<Node<E, T>> flatTree = this.iterable(root);
+    public Node<E, T> search(E key) { // O(h)
+        Node<E, T> curNode = this.root;
 
-        for (Node<E, T> node : flatTree) {
-            if (node.getKey().compareTo(key) == 0) {
-                return node;
+        while (!curNode.isLeaf()) {
+            if (curNode.compareTo(key) == 0) {
+                return curNode;
+            } else if (curNode.compareTo(key) > 0) {
+                curNode = curNode.getLeftChild();
+            } else {
+                curNode = curNode.getRightChild();
             }
         }
         return null;
     }
-    public boolean contains(E element) { // O(log n)
+    public boolean contains(E element) { // O(h)
         Node<E, T> curNode = this.root;
         Pairs<E, T> curElement = curNode.getElement();
 
@@ -405,10 +404,9 @@ public class Tree<E extends Comparable<E>, T> {
 
         return nodeList;
     }
-    public void forEach(Consumer<? super Pairs<E, T>> action) {
+    public void forEach(Consumer<? super Pairs<E, T>> action) { // O(n)
         try {
             Objects.requireNonNull(action);
-            // TODO: figure out node.next()
             ArrayList<Pairs<E, T>> flatTree = this.iterator(); // temporary
             if (this.size() > 0) {
                 for (Pairs<E, T> element : flatTree) {
@@ -426,7 +424,7 @@ public class Tree<E extends Comparable<E>, T> {
 
     // To String Method
     @Override
-    public String toString() {
+    public String toString() { // O(n)
         StringBuilder string = new StringBuilder();
         ArrayList<Pairs<E, T>> list = iterator();
 
