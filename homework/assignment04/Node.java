@@ -2,13 +2,16 @@
 // Written by: Shades Meyers
 // Description: A Node a public Pairs as its element
 // Challenges:
-// Time Spent: 55 minutes + ( - )
+// Time Spent: 55 minutes
 //
 // Revision history:
 // Date:        By:     Action:
 // -------------------------------
 // 2024-July-24 SM      File created
 // 2024-July-25 SM      Added "next" method
+// 2024-July-29 SM      Added another compareTo method
+//                      Removed next() method - it wasn't being used
+//                      Removed hasNext() - it wasn't being used
 
 
 import java.util.ArrayList;
@@ -34,15 +37,14 @@ public class Node<E extends Comparable<E>, T> implements Comparable<Pairs<E, T>>
 
     // Methods
     // Accessors & Mutators
-    // Parent
+        // Parent
     public Node<E, T> getParent() {
         return this.parent;
     }
     public void setParent(Node<E, T> newParent) {
         this.parent = newParent;
     }
-
-    // Children
+        // Children
     public Node<E, T> getLeftChild() {
         return this.leftChild;
     }
@@ -52,7 +54,6 @@ public class Node<E extends Comparable<E>, T> implements Comparable<Pairs<E, T>>
     public Node<E, T> getRightChild() {
         return this.rightChild;
     }
-
     public void setRightChild(Node<E, T> newChild) {
         this.rightChild = newChild;
     }
@@ -63,8 +64,7 @@ public class Node<E extends Comparable<E>, T> implements Comparable<Pairs<E, T>>
 
         return childList;
     }
-
-    // Element
+        // Element
     public Pairs<E, T> getElement() {
         return this.element;
     }
@@ -82,65 +82,12 @@ public class Node<E extends Comparable<E>, T> implements Comparable<Pairs<E, T>>
     public boolean isLeaf() {
         return this.element == null;
     }
-    // Returns true if there is another node in in-order traversal sequence
-    public boolean hasNext() {
-        if (!this.isLeaf()) {
-            boolean hasRightChild = !this.getRightChild().isLeaf(); // left child comes
-            // before the parent, so we only need to check for the
-            // presence of the right child
-
-            // If node is a left child, then Parent is next
-            boolean isLeft = false;
-            if (!this.isRoot()) {
-                ArrayList<Node<E, T>> siblings = this.getParent().getChildren();
-
-                // check if self is left sibling
-                isLeft = siblings.indexOf(this) == 0;
-            }
-
-            // Is parent a left node?
-            boolean isParentLeft = false;
-            if (!this.isRoot()) {
-                Node<E, T> parent = this.getParent();
-                isParentLeft = parent.getParent().getChildren().indexOf(parent) == 0;
-            }
-
-            return hasRightChild || isLeft || isParentLeft;
-        } else {
-            return false;
-        }
-    }
-    // public Node<E, T> next() { // In Order Traversal
-    //     // TODO: finish
-    //     // if (!this.getLeftChild().isLeaf()) {
-    //     //     return this.getLeftChild();
-    //     // }
-        
-    //     // if (!this.isRoot()) {
-    //     //     if (this.getParent().getChildren().indexOf(this) == 0) {
-    //     //         return this.getParent();
-    //     //     }
-
-    //     //     Node<E, T> parent = this.getParent();
-    //     //     if (parent.getParent().getChildren().indexOf(parent) == 0) {
-    //     //         return parent.getParent();
-    //     //     }
-    //     // } 
-        
-    //     // return null;
-    // }
-
     public E getKey() { return this.getElement().getKey(); }
     public T getValue() { return this.getElement().getValue(); }
     public void setValue(T val) { this.getElement().setValue(val); }
 
     // Overrides
     // Comparisons
-    public boolean equals(Node<E, T> val2) {
-        Node<E, T> val1 = this;
-
-        return val1.getElement() == val2.getElement();
-    }
     @Override
     public int compareTo(Pairs<E, T> element) {
         return this.getElement().compareTo(element);
@@ -148,6 +95,10 @@ public class Node<E extends Comparable<E>, T> implements Comparable<Pairs<E, T>>
     public int compareTo(Node<E, T> node2) {
         return this.compareTo(node2.getElement());
     }
+    public int compareTo(E key) {
+        return this.getElement().compareTo(key);
+    }
+
 
     // To String
     @Override
