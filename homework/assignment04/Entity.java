@@ -2,7 +2,7 @@
 // Written by:  Shades Meyers
 // Description: A parent class for Heros and Enemies
 // Challenges:  
-// Time Spent:  19 minutes
+// Time Spent:  20 minutes
 //
 // Revision history:
 // Date:        By:     Action:
@@ -66,11 +66,11 @@ public class Entity {
     
     // Combat
         // Attacking
-    public void attack(Entity target, Dice damageDie) {
+    public void attack(Entity target) {
         int attackRoll = d20.roll(1) + this.getStr();
 
         if (attackRoll >= target.getAC()) {
-            int damage = damageDie.roll(1);
+            int damage = this.damageDie.roll(1);
             target.takeDamage(damage);
         } else {
             System.out.println(this.name + " missed " + target.getName());
