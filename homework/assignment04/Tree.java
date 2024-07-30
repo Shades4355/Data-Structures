@@ -2,7 +2,7 @@
 // Written by:  Shades Meyers
 // Description: A list based Map
 // Challenges:  Removal logic makes my head spin
-// Time Spent:  10 h 04 minutes
+// Time Spent:  10 h 35 minutes + ( - )
 //
 // Revision history:
 // Date:        By:     Action:
@@ -16,6 +16,9 @@
 //                          node is the root
 // 2024-July-29 SM      Fixed search() method to be O(h) instead of O(n)
 //                      Found a crippling bug in add() method
+// 2024-July-30 SM      Bug hunting (see above)
+//                      Rewrote addBetween method - original had a 
+//                          critical bug in it
 
 
 import java.util.ArrayList;
@@ -44,20 +47,9 @@ public class Tree<E extends Comparable<E>, T> {
         Pairs<E, T> parentElement = parent.getElement();
 
         node.setParent(parent);
-        child.setParent(node);
        
-        if (!child.isLeaf()) {
-            // If nodeElement is greater than the child,
-            // child becomes a leftChild of node
-            if (nodeElement.compareTo(child.getElement()) == 1) {
-                node.setLeftChild(child);
-            } else {
-                node.setRightChild(child);
-            }
-        } else {
-            // If child is a leaf...
-            child.setParent(null); // replace with node's leaves
-        }
+        // Since child is a leaf...
+        child.setParent(null); // replace with node's leaves
 
         // if parentElement is greater than nodeElement,
         // node becomes a leftChild of parent
@@ -91,6 +83,7 @@ public class Tree<E extends Comparable<E>, T> {
             this.size++;
             return true;
         } else if (this.getRoot().getLeftChild().isLeaf() || this.getRoot().getRightChild().isLeaf()) {
+            // Node<E, T> curNode = this.getRoot();
             if (newNode.compareTo(this.getRoot().getElement()) == 1 && this.getRoot().getRightChild().isLeaf()) {
                 newNode.setParent(this.getRoot());
                 this.getRoot().setRightChild(newNode);
@@ -119,6 +112,7 @@ public class Tree<E extends Comparable<E>, T> {
     }
     
     // Find Parent and Child nodes for a given new node
+    // Child should be a
     private ArrayList<Node<E, T>> findBetween(Node<E, T> searchNode, Node<E, T> curNode) { // O(log n)
         ArrayList<Node<E, T>> retList = new ArrayList<Node<E, T>>();
         Pairs<E, T> nodeElement = searchNode.getElement();
@@ -135,27 +129,11 @@ public class Tree<E extends Comparable<E>, T> {
         if (!leftChild.isLeaf() && !rightChild.isLeaf()) { // If no child is a leaf...
             if (nodeElement.compareTo(curElement) < 0) {
                 // If searchNode is less than curNode...
-                if (nodeElement.compareTo(leftChild.getElement()) > 0) {
-                    // And node is greater than leftChild...
-                    retList.add(curNode);
-                    retList.add(leftChild);
-
-                    return retList;
-                } else { // If node is less than leftChild, advance down the left path
-                    return findBetween(searchNode, curNode.getLeftChild());
-                }
+                return findBetween(searchNode, leftChild);
             } else {
-                // If node is greater than curNode
-                if (nodeElement.compareTo(rightChild.getElement()) < 0) {
-                    // If node is less than rightChild
-                    retList.add(curNode);
-                    retList.add(rightChild);
-
-                    return retList;
-                } else {
-                    return findBetween(searchNode, rightChild);
-                }
-            } 
+                // If searchNode is greater than curNode
+                return findBetween(searchNode, rightChild);
+            }
         } else { // If either child is a leaf...
             if (nodeElement.compareTo(curElement) < 0) {
                 // If searchNode is less than curNode...
@@ -194,10 +172,10 @@ public class Tree<E extends Comparable<E>, T> {
     }
     
     // Removal
-    public Pairs<E, T> remove(E key) {
+    public Pairs<E, T> remove(E key) { // O(h)
         return this.remove(this.search(key));
     }
-    public Pairs<E, T> remove(int index) {
+    public Pairs<E, T> remove(int index) { // O(n)
         return this.remove(this.get(index));
     }
     public Pairs<E, T> remove(Node<E, T> node) { // O(h)
