@@ -2,7 +2,7 @@
 // Written by:  Shades Meyers
 // Description: A list based Map
 // Challenges:  Removal logic makes my head spin
-// Time Spent:  9 h 42 minutes
+// Time Spent:  10 h 04 minutes
 //
 // Revision history:
 // Date:        By:     Action:
@@ -15,6 +15,7 @@
 //                      Fixed edge-case in remove(node) when 
 //                          node is the root
 // 2024-July-29 SM      Fixed search() method to be O(h) instead of O(n)
+//                      Found a crippling bug in add() method
 
 
 import java.util.ArrayList;
@@ -41,29 +42,40 @@ public class Tree<E extends Comparable<E>, T> {
     private void addBetween(Node<E, T> node, Node<E, T> parent, Node<E, T> child) {
         Pairs<E, T> nodeElement = node.getElement();
         Pairs<E, T> parentElement = parent.getElement();
-        Pairs<E, T> childElement = child.getElement();
+
         node.setParent(parent);
         child.setParent(node);
        
-        if (childElement != null) {
-            // If nodeElement is greater than childElement, child becomes a leftChild of
-            // node
-            if (nodeElement.compareTo(childElement) == 1) {
+        if (!child.isLeaf()) {
+            // If nodeElement is greater than the child,
+            // child becomes a leftChild of node
+            if (nodeElement.compareTo(child.getElement()) == 1) {
                 node.setLeftChild(child);
             } else {
                 node.setRightChild(child);
             }
+        } else {
+            // If child is a leaf...
+            child.setParent(null); // replace with node's leaves
         }
 
-        // if parentElement is greater than nodeElement, node becomes a leftChild of
-        // parent
+        // if parentElement is greater than nodeElement,
+        // node becomes a leftChild of parent
         if (parentElement.compareTo(nodeElement) == 1) {
             parent.setLeftChild(node);
         } else {
             parent.setRightChild(node);
         }
     }
+    public boolean add(E key, T value) {
+        return this.add(new Pairs<E, T>(key, value));
+    }
     public boolean add(Pairs<E, T> element) {
+
+        // TODO: fix:
+        // Bomb is being added to the right instead of the left,
+        // and isn't picking up the children
+
         Node<E, T> newNode = new Node<E, T>(element, null);
         if (this.getRoot() == null ) {
             this.root = newNode;
@@ -104,9 +116,6 @@ public class Tree<E extends Comparable<E>, T> {
             }
         }
         return false;
-    }
-    public boolean add(E key, T value) {
-        return this.add(new Pairs<E, T>(key, value));
     }
     
     // Find Parent and Child nodes for a given new node
@@ -361,12 +370,11 @@ public class Tree<E extends Comparable<E>, T> {
     }
     public boolean contains(E element) { // O(h)
         Node<E, T> curNode = this.root;
-        Pairs<E, T> curElement = curNode.getElement();
 
         while (!curNode.isLeaf()) {
-            if (curElement.compareTo(element) == 0) {
+            if (curNode.compareTo(element) == 0) {
                 return true;
-            } else if (curElement.compareTo(element) > 0) {
+            } else if (curNode.compareTo(element) > 0) {
                 curNode = curNode.getLeftChild();
             } else {
                 curNode = curNode.getRightChild();
