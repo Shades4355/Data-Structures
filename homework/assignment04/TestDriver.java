@@ -50,6 +50,21 @@ public class TestDriver {
         System.out.println(inventory);
         // expected outcome:
         // {{Arrows: 14}, {Bombs: 4}}
-
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        inventory.remove("Bombs");
+        System.out.println(inventory);
+        // expected outcome:
+        // {{Arrows: 14}}
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        inventory.add("Healing Potions", 5);
+        System.out.println(inventory);
+        // expected outcome:
+        // {{Arrows: 14}, {Healing Potions: 5}}
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        inventory.add("Bombs", 3);
+        System.out.println(inventory);
+        // expected outcome:
+        // {{Arrows: 14}, {Bombs: 4}, {Healing Potions, 5}}
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     } // end main method
 } // end program
