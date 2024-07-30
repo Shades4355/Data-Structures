@@ -1,8 +1,8 @@
-// File name: TestDriver.java
-// Written by: Shades Meyers
+// File name:   TestDriver.java
+// Written by:  Shades Meyers
 // Description: A Driver file for testing Tree.java
-// Challenges:
-// Time Spent: 15 minutes
+// Challenges:  None
+// Time Spent:  15 minutes
 //
 // Revision history:
 // Date:        By:     Action:

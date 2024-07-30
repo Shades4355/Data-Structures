@@ -10,6 +10,7 @@
 // 2024-July-28 SM      File created
 //                      Inspiration taken from my previous work
 //                          https://github.com/Shades4355/D20_Combat
+// 2024-July-29 SM      Formatting print statements
 
 
 public class Entity {
@@ -73,7 +74,7 @@ public class Entity {
             int damage = this.damageDie.roll(1);
             target.takeDamage(damage);
         } else {
-            System.out.println(this.name + " missed " + target.getName());
+            System.out.println("\n" + this.name + " missed " + target.getName());
         }
     }
         // Taking Damage
@@ -84,7 +85,7 @@ public class Entity {
             this.setHP(0);
             this.alive = false;
         } else {
-            System.out.println(this.name + " took " + damage + " damage, and has " + this.getHP() + " hit points left.");
+            System.out.println("\n" + this.name + " took " + damage + " damage, and has " + this.getHP() + " hit points left.");
         }
     }
 

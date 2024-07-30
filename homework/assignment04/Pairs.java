@@ -1,8 +1,8 @@
-// File name: Pairs.java
-// Written by: Shades Meyers
+// File name:   Pairs.java
+// Written by:  Shades Meyers
 // Description: A Pairs class for storing key-value pairs
 // Challenges:  Implementing compareTo() for generic E
-// Time Spent: 2 h 08 minutes
+// Time Spent:  2 h 08 minutes
 //
 // Revision history:
 // Date:         By:    Action:

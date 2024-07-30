@@ -1,8 +1,8 @@
-// File name: Node.java
-// Written by: Shades Meyers
+// File name:   Node.java
+// Written by:  Shades Meyers
 // Description: A Node a public Pairs as its element
-// Challenges:
-// Time Spent: 55 minutes
+// Challenges:  None
+// Time Spent:  55 minutes
 //
 // Revision history:
 // Date:        By:     Action:
