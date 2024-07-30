@@ -1,7 +1,7 @@
 // File name:   Hero.java
 // Written by:  Shades Meyers
 // Description: A template for the Player
-// Challenges:  
+// Challenges:  None
 // Time Spent:  1 h 42 minutes
 //
 // Revision history:
@@ -11,6 +11,8 @@
 // 2024-July-28 SM      Started fleshing out class
 //                      Inspiration taken from my previous work
 //                          https://github.com/Shades4355/D20_Combat
+// 2024-July-29 SM      Bug squashing
+//                      Added a "Struggle" attack
 
 
 import java.util.ArrayList;
@@ -36,9 +38,8 @@ public class Hero extends Entity {
     public int getLevel() { return this.level; }
     public int getXP() { return this.xp; }
         // Inventory
-    public void getInventory() { System.out.println(inventory); }
-    public void checkInventory() {
-        Scanner input = new Scanner(System.in);
+    public Tree<String, Integer> getInventory() { return inventory; }
+    public void checkInventory(Scanner input) {
         int invCap = 7 + this.str;
 
         while (invCap < this.inventory.size()) {
@@ -52,25 +53,25 @@ public class Hero extends Entity {
             }
             inventory.remove(choice);
         } 
-        input.close();
     }
 
     // Combat
         // Gain XP
-    public void gainXP(int xpGained) {
+    public void gainXP(int xpGained, Scanner input) {
         this.xp += xpGained;
 
-        int threshold = 7 + this.level;
+        int threshold = 3 + this.level;
         while (this.xp >= threshold) {
-            this.levelUp();
+            this.levelUp(input);
             this.xp -= threshold;
             threshold = 7 + this.level;
         }
+        Start.start(this, input);
     }
     
     // Level up
         // Level up
-    public void levelUp() {
+    public void levelUp(Scanner input) {
         int bonusHP = hitDice.roll(1) + this.con;
         this.maxHP += bonusHP;
         this.hitPoints += bonusHP;
@@ -79,10 +80,8 @@ public class Hero extends Entity {
         System.out.println("Pick a stat to increase:");
 
         for (String stat : availableStats) {
-            System.out.println("\t" + stat);
+            System.out.println(stat);
         }
-
-        Scanner input = new Scanner(System.in);
 
         String choice = "";
         while (!contains(availableStats, choice)) {
@@ -90,11 +89,10 @@ public class Hero extends Entity {
             choice = input.nextLine().toLowerCase();
         }
 
-        this.incStats(choice);
-        input.close();
+        this.incStats(choice, input);
     }
         // Increase Stats
-    public void incStats(String stat) {
+    public void incStats(String stat, Scanner input) {
         if (stat.equals("str")) {
             this.str += 1;
         } else if (stat.equals("dex")) {
@@ -104,41 +102,49 @@ public class Hero extends Entity {
             this.maxHP += this.level;
             this.hitPoints += this.level;
         }
+        this.gainXP(0, input);
     }
         // Show Inventory
-    public void showInv(Enemy enemy) {
+    public void showInv(Enemy enemy, Scanner input) {
         System.out.println("\nInventory:");
         inventory.forEach((n) -> {
             System.out.println(n.getKey() + ": " + n.getValue());
         });
-        Scanner input = new Scanner(System.in);
+        if (inventory.size() == 0 || (inventory.size() == 1 && inventory.contains("Healing Potions"))) {
+            System.out.println("Struggle");
+        }
+        System.out.println("Back");
         String choice = "";
         ArrayList<String> invList = new ArrayList<>();
 
         inventory.forEach((n) -> invList.add(n.getKey()));
-        invList.add("back");
+        if (inventory.size() == 0 || (inventory.size() == 1 && inventory.contains("Healing Potions"))) {
+            invList.add("Struggle");
+        }
+        invList.add("Back");
 
         while (!contains(invList, choice)){
             System.out.print(">> ");
             choice = input.nextLine();
         }
 
-        input.close();
-
-        if (!choice.equals("back")) {
-            if (choice.equals("Healing Potion")) {
+        if (!choice.equals("Back")) {
+            if (choice.equals("Healing Potions")) {
                 this.hitPoints += new Dice(4).roll(2);
 
                 if (this.hitPoints > this.maxHP) {
                     this.hitPoints = this.maxHP;
                 }
+                System.out.println("\n" + this.name + " healed up to " + this.hitPoints);
+            } else if (choice.equals("Struggle")) {
+                this.attack(enemy);
+                this.attack(this);
             } else {
                 this.attack(enemy);
                 inventory.add(choice, inventory.search(choice).getValue() - 1);
             }
-            input.close();
         } else {
-            Start.playerTurn(this, enemy);
+            Start.playerTurn(this, enemy, input);
         }
     }
 
