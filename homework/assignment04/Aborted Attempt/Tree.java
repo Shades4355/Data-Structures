@@ -1,6 +1,6 @@
 // File name:   Tree.java
 // Written by:  Shades Meyers
-// Description: A list based Map
+// Description: A tree based Map
 // Challenges:  Removal logic makes my head spin
 // Time Spent:  10 h 35 minutes + ( - )
 //
