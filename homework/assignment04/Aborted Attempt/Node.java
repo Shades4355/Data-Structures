@@ -1,6 +1,6 @@
 // File name:   Node.java
 // Written by:  Shades Meyers
-// Description: A Node a public Pairs as its element
+// Description: A Node with Pairs as its element
 // Challenges:  None
 // Time Spent:  55 minutes
 //
