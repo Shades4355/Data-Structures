@@ -31,4 +31,15 @@ public class Map <E extends Comparable<E>, T> {
     }
 
     // Methods
+    // add()
+    // addBetween()
+    // remove()
+    // contains()
+    // search()
+    // get()
+    // indexOf()
+    // iterator()
+    // iterable()
+    // forEach()
+    // toString()
 }
