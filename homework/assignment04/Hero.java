@@ -13,6 +13,7 @@
 //                          https://github.com/Shades4355/D20_Combat
 // 2024-July-29 SM      Bug squashing
 //                      Added a "Struggle" attack
+// 2024-July-31 SM      Switched from using Tree for inventory, to Map
 
 
 import java.util.ArrayList;
@@ -61,10 +62,10 @@ public class Hero extends Entity {
         this.xp += xpGained;
 
         int threshold = 3 + this.level;
-        while (this.xp >= threshold) {
-            this.levelUp(input);
+        if (this.xp >= threshold) {
             this.xp -= threshold;
             threshold = 7 + this.level;
+            this.levelUp(input);
         }
         Start.start(this, input);
     }
