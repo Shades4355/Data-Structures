@@ -1,6 +1,6 @@
 // File name:   Start.java
 // Written by:  Shades Meyers
-// Description: The Driver for assignment 04
+// Description: The driver class for assignment 04
 // Challenges:  Working with Scanner is always...an experience
 // Time Spent:  2 h 24 minutes
 //
@@ -10,6 +10,7 @@
 // 2024-July-28 SM      File created
 // 2024-July-29 SM      Bug squashing
 //                      Added dropItems() method
+// 2024-July-31 SM      Minor print formatting tweaks
 
 
 import java.util.ArrayList;
@@ -76,7 +77,9 @@ public class Start {
         }
 
         if (choice.equals("Quit")) {
-            System.out.println("Goodbye...");
+            System.out.println("\nCongratulations, " + player.getName()
+                + ", you made it to level " + player.getLevel() + "!");
+                System.out.println("\nGoodbye...\n");
             System.exit(0);
         } else {
             player.showInv(enemy, input);
@@ -99,7 +102,7 @@ public class Start {
         dropTable.add(new Pairs<String,Integer>("Bombs", 3));
         dropTable.add(new Pairs<String,Integer>("Bombs", 5));
         dropTable.add(new Pairs<String,Integer>("Bow and Arrows", 5));
-        dropTable.add(new Pairs<String,Integer>("Healing Potions", 1));
+        dropTable.add(new Pairs<String,Integer>("Healing Potions", 2));
         dropTable.add(new Pairs<String,Integer>("Throwing Knives", 3));
         dropTable.add(new Pairs<String,Integer>("Throwing Knives", 5));
         
