@@ -2,25 +2,26 @@
 // Written by:  Shades Meyers
 // Description: A Doubly Linked List
 // Challenges:  
-// Time Spent:  0 minutes
+// Time Spent:  5 minutes
 //
 // Revision history:
 // Date:        By:     Action:
 // -------------------------------
 // 2024-July-31 SM      File copied from in-class work
+//                      Modified for use with a Map
 
 
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class DLL<E> {
+public class DLL<E extends Comparable<E>, T> {
     // variables
     private int size;
-    private DLLNode<E> header;
-    private DLLNode<E> trailer;
+    private DLLNode<E, T> header;
+    private DLLNode<E, T> trailer;
 
     // Constructors
-    DLL(DLLNode<E> node) {
+    DLL(DLLNode<E, T> node) {
         this.size = 1;
         this.header = node;
         this.trailer = node;
@@ -43,12 +44,12 @@ public class DLL<E> {
     }
 
     // Insertions
-    public void add(E element) {
+    public void add(Pairs<E, T> element) {
         // calls addLast
         this.addLast(element);
     }
-    public void addLast(E element) {
-        DLLNode<E> node = new DLLNode<E>(element);
+    public void addLast(Pairs<E, T> element) {
+        DLLNode<E, T> node = new DLLNode<E, T>(element);
 
         if (this.header == null) { // if list is empty...
             this.header = node;
@@ -60,8 +61,8 @@ public class DLL<E> {
         }
         this.size += 1;
     }
-    public void addFirst(E element) {
-        DLLNode<E> node = new DLLNode<E>(element);
+    public void addFirst(Pairs<E, T> element) {
+        DLLNode<E, T> node = new DLLNode<E, T>(element);
 
         if (this.header == null) { // if list is empty...
             this.header = node;
@@ -76,8 +77,8 @@ public class DLL<E> {
     }
 
     // Get
-    public E get(int index) { // get element at given index
-        DLLNode<E> currentNode = this.header;
+    public Pairs<E, T> get(int index) { // get element at given index
+        DLLNode<E, T> currentNode = this.header;
         if (index < this.size && index >= 0) {
             for (int i = 1; i <= index; i++) {
                 currentNode = currentNode.getNextNode();
@@ -87,12 +88,12 @@ public class DLL<E> {
         }
         return currentNode.getElement();
     }
-    public E first() { return this.header.getElement(); }
-    public E last() { return this.trailer.getElement(); }
+    public Pairs<E, T> first() { return this.header.getElement(); }
+    public Pairs<E, T> last() { return this.trailer.getElement(); }
 
     // add between
-    public void addBetween(E element, DLLNode<E> before, DLLNode<E> after) {
-        DLLNode<E> newNode = new DLLNode<E>(element);
+    public void addBetween(Pairs<E, T> element, DLLNode<E, T> before, DLLNode<E, T> after) {
+        DLLNode<E, T> newNode = new DLLNode<E, T>(element);
         before.setNextNode(newNode);
         after.setPrevNode(newNode);
 
@@ -101,9 +102,9 @@ public class DLL<E> {
     }
 
     // removal
-    public E removeFirst() {
+    public Pairs<E, T> removeFirst() {
         if (this.size > 0){ // if there is a node to remove...
-            DLLNode<E> toBeRemoved = this.header;
+            DLLNode<E, T> toBeRemoved = this.header;
             if (toBeRemoved.getNextNode() != null) { // if there's more than 1 node...
                 this.header = toBeRemoved.getNextNode();
                 size -= 1;
@@ -119,11 +120,11 @@ public class DLL<E> {
         }
     }
 
-    public E removeLast() {
+    public Pairs<E, T> removeLast() {
         if (this.size > 0) { // If there's a node to remove...
-            DLLNode<E> oldTrailer = this.trailer;
+            DLLNode<E, T> oldTrailer = this.trailer;
             if (oldTrailer.getPrevNode() != null) { // if there's more than 1 node in list...
-                DLLNode<E> node = this.trailer.getPrevNode();
+                DLLNode<E, T> node = this.trailer.getPrevNode();
 
                 node.setNextNode(null);
                 this.trailer = node;
@@ -140,7 +141,7 @@ public class DLL<E> {
     }
 
     // remove a specific node
-    public E remove(DLLNode<E> node) {
+    public Pairs<E, T> remove(DLLNode<E, T> node) {
         if (this.isEmpty()) { // if the list is empty...
             return null;
         }
@@ -163,10 +164,10 @@ public class DLL<E> {
     // iterable
     // .forEac() accepts lambda expressions
     // ex: list.forEach((n) -> System.out.println(n));
-    public void forEach(Consumer<? super E> action) throws ArrayIndexOutOfBoundsException {
+    public void forEach(Consumer<? super Pairs<E, T>> action) throws ArrayIndexOutOfBoundsException {
         try{
             Objects.requireNonNull(action);
-            DLLNode<E> currentNode = this.header;
+            DLLNode<E, T> currentNode = this.header;
 
             if (this.size > 0) {
                 while (currentNode.hasNext()) {
