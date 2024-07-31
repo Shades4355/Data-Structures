@@ -12,7 +12,7 @@
 
 public class TestDriver {
     public static void main(String[] args) {
-        Tree<String, Integer> inventory = new Tree<String, Integer>();
+        Map<String, Integer> inventory = new Map<String, Integer>();
 
         inventory.add(new Pairs<String, Integer>("Healing Potions", 3));
 

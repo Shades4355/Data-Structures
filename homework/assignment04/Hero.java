@@ -20,13 +20,13 @@ import java.util.Scanner;
 
 public class Hero extends Entity {
     // Variables
-    private Tree<String, Integer> inventory;
+    private Map<String, Integer> inventory;
     private int xp;
 
     // Constructors
     Hero(String name) {
         super(name, 1, 10, 6, 4, 1, 2, 2);
-        this.inventory = new Tree<String, Integer>(new Pairs<String, Integer>("Bow and Arrows", 5));
+        this.inventory = new Map<String, Integer>(new Pairs<String, Integer>("Bow and Arrows", 5));
         this.inventory.add("Bombs", 2);
         this.inventory.add("Healing Potions", 3);
         this.xp = 0;
@@ -38,7 +38,7 @@ public class Hero extends Entity {
     public int getLevel() { return this.level; }
     public int getXP() { return this.xp; }
         // Inventory
-    public Tree<String, Integer> getInventory() { return inventory; }
+    public Map<String, Integer> getInventory() { return inventory; }
     public void checkInventory(Scanner input) {
         int invCap = 7 + this.str;
 
