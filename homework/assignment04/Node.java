@@ -16,10 +16,7 @@
 public class Node<E extends Comparable<E>, T> implements Comparable<Pairs<E, T>> {
     // variables
     private Pairs <E, T> element;
-    private Node<E, T> nextNode;
-    private Node<E, T> prevNode;
-    private Node<E, T> aboveNode;
-    private Node<E, T> bellowNode;
+    private Node<E, T> nextNode, prevNode, aboveNode, belowNode;
 
     // Constructor
     Node() {
@@ -27,21 +24,21 @@ public class Node<E extends Comparable<E>, T> implements Comparable<Pairs<E, T>>
         this.nextNode = null;
         this.prevNode = null;
         this.aboveNode = null;
-        this.bellowNode = null;
+        this.belowNode = null;
     }
     Node(Pairs<E, T> element) {
         this.element = element;
         this.nextNode = null;
         this.prevNode = null;
         this.aboveNode = null;
-        this.bellowNode = null;
+        this.belowNode = null;
     }
     Node(Pairs<E, T> element, Node<E, T> prevNode, Node<E, T> nextNode) {
         this.element = element;
         this.nextNode = nextNode;
         this.prevNode = prevNode;
         this.aboveNode = null;
-        this.bellowNode = null;
+        this.belowNode = null;
     }
 
     // Accessors & Mutators
@@ -57,9 +54,9 @@ public class Node<E extends Comparable<E>, T> implements Comparable<Pairs<E, T>>
     // Above Node
     public Node<E, T> getAboveNode() { return this.aboveNode; }
     public void setAboveNode(Node<E, T> aboveNode) { this.aboveNode = aboveNode; }
-    // Bellow Node
-    public Node<E, T> getBellowNode() { return this.bellowNode; }
-    public void setBellowNode(Node<E, T> bellowNode) { this.bellowNode = bellowNode; }
+    // Below Node
+    public Node<E, T> getBelowNode() { return this.belowNode; }
+    public void setBelowNode(Node<E, T> belowNode) { this.belowNode = belowNode; }
     // Keys
     public E getKey() { return this.getElement().getKey(); }
     public void setKey(E newKey) { this.getElement().setKey(newKey); }
