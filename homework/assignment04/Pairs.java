@@ -15,23 +15,18 @@
 public class Pairs<E extends Comparable<E>, T> implements Comparable<E> {
     // Variables
     private E key;
-    private Double inf;
     private T value;
 
     // Constructor
     Pairs(E key, T value) {
-        this.inf = null;
         this.key = key;
         this.value = value;
-    }
-    Pairs(Double inf){
-        this.inf = inf;
-        this.value = null;
     }
 
     // Accessors and Mutators
         // TODO: figure out how to return a Double from getKey()
     // Key
+        // TODO: return Object?
     public E getKey() {
         return this.key;
     }

@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 public class Map <E extends Comparable<E>, T> {
     // Variables
     private int size;
-    Node<E, T> header, trailer;
+    Node<E, T> start, header, trailer;
 
     // Constructors
         // TODO: add infinity to headers and trailers
