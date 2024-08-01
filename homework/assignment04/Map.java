@@ -1,13 +1,14 @@
 // File name:   Map.java
 // Written by:  Shades Meyers
-// Description: A Linked List Map
+// Description: A Linked List Skip List Map
 // Challenges:  
-// Time Spent:  1 h 29 minutes
+// Time Spent:  1 h 34 minutes + ( - )
 //
 // Revision history:
 // Date:        By:     Action:
 // -------------------------------
 // 2024-July-31 SM      File created
+// 2024-Aug-01  SM      Started converting to Skip List
 
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class Map <E extends Comparable<E>, T> {
     Node<E, T> header, trailer;
 
     // Constructors
+        // TODO: add infinity to headers and trailers
     Map() {
         this.header = new Node<E, T>();
         this.trailer = new Node<E, T>(null, this.header, null);

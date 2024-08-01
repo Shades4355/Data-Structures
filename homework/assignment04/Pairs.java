@@ -2,27 +2,35 @@
 // Written by:  Shades Meyers
 // Description: A Pairs class for storing key-value pairs
 // Challenges:  Implementing compareTo() for generic E
-// Time Spent:  2 h 08 minutes
+// Time Spent:  2 h 18 minutes + ( - )
 //
 // Revision history:
 // Date:         By:    Action:
 // -------------------------------
 // 2024-July-24 SM      File created
 // 2024-July-26 SM      Worked on compareTo with SI
+// 2024-Aug-01  SM      Started converting to Skip List Node
 
 
 public class Pairs<E extends Comparable<E>, T> implements Comparable<E> {
     // Variables
     private E key;
+    private Double inf;
     private T value;
 
     // Constructor
     Pairs(E key, T value) {
+        this.inf = null;
         this.key = key;
         this.value = value;
     }
+    Pairs(Double inf){
+        this.inf = inf;
+        this.value = null;
+    }
 
     // Accessors and Mutators
+        // TODO: figure out how to return a Double from getKey()
     // Key
     public E getKey() {
         return this.key;
