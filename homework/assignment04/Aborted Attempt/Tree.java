@@ -27,12 +27,12 @@ import java.util.function.Consumer;
 
 public class Tree<E extends Comparable<E>, T> {
     // Variables
-    private Node<E, T> root;
+    private OldNode<E, T> root;
     private int size;
 
     // Constructors
     Tree(Pairs<E, T> element) {
-        this.root = new Node<E, T>(element, null);
+        this.root = new OldNode<E, T>(element, null);
         this.size = 1;
     }
     Tree() {
@@ -42,7 +42,7 @@ public class Tree<E extends Comparable<E>, T> {
 
     // Methods
     // Insertions
-    private void addBetween(Node<E, T> node, Node<E, T> parent, Node<E, T> child) {
+    private void addBetween(OldNode<E, T> node, OldNode<E, T> parent, OldNode<E, T> child) {
         Pairs<E, T> nodeElement = node.getElement();
         Pairs<E, T> parentElement = parent.getElement();
 
@@ -68,7 +68,7 @@ public class Tree<E extends Comparable<E>, T> {
         // Bomb is being added to the right instead of the left,
         // and isn't picking up the children
 
-        Node<E, T> newNode = new Node<E, T>(element, null);
+        OldNode<E, T> newNode = new OldNode<E, T>(element, null);
         if (this.getRoot() == null ) {
             this.root = newNode;
             this.size++;
@@ -83,7 +83,7 @@ public class Tree<E extends Comparable<E>, T> {
             this.size++;
             return true;
         } else if (this.getRoot().getLeftChild().isLeaf() || this.getRoot().getRightChild().isLeaf()) {
-            // Node<E, T> curNode = this.getRoot();
+            // OldNode<E, T> curNode = this.getRoot();
             if (newNode.compareTo(this.getRoot().getElement()) == 1 && this.getRoot().getRightChild().isLeaf()) {
                 newNode.setParent(this.getRoot());
                 this.getRoot().setRightChild(newNode);
@@ -91,7 +91,7 @@ public class Tree<E extends Comparable<E>, T> {
                 newNode.setParent(this.getRoot());
                 this.getRoot().setLeftChild(newNode);
             } else {
-                ArrayList<Node<E, T>> nodesAround = findBetween(newNode, this.getRoot());
+                ArrayList<OldNode<E, T>> nodesAround = findBetween(newNode, this.getRoot());
 
                 if (nodesAround != null) {
                     this.addBetween(newNode, nodesAround.get(0), nodesAround.get(1));
@@ -100,7 +100,7 @@ public class Tree<E extends Comparable<E>, T> {
                 }
             }
         } else {
-            ArrayList<Node<E, T>> nodesAround = findBetween(newNode, this.getRoot());
+            ArrayList<OldNode<E, T>> nodesAround = findBetween(newNode, this.getRoot());
 
             if (nodesAround != null) {
                 this.addBetween(newNode, nodesAround.get(0), nodesAround.get(1));
@@ -113,12 +113,12 @@ public class Tree<E extends Comparable<E>, T> {
     
     // Find Parent and Child nodes for a given new node
     // Child should be a
-    private ArrayList<Node<E, T>> findBetween(Node<E, T> searchNode, Node<E, T> curNode) { // O(log n)
-        ArrayList<Node<E, T>> retList = new ArrayList<Node<E, T>>();
+    private ArrayList<OldNode<E, T>> findBetween(OldNode<E, T> searchNode, OldNode<E, T> curNode) { // O(log n)
+        ArrayList<OldNode<E, T>> retList = new ArrayList<OldNode<E, T>>();
         Pairs<E, T> nodeElement = searchNode.getElement();
         Pairs<E, T> curElement = curNode.getElement();
-        Node<E, T> leftChild = curNode.getLeftChild();
-        Node<E, T> rightChild = curNode.getRightChild();
+        OldNode<E, T> leftChild = curNode.getLeftChild();
+        OldNode<E, T> rightChild = curNode.getRightChild();
 
         if (searchNode.compareTo(curNode) == 0) {
             // If curNode == node, change curNode's value to node's value
@@ -159,7 +159,7 @@ public class Tree<E extends Comparable<E>, T> {
     } // end findBetween
 
     // Set Method
-    private T setNode(Node<E, T> oldNode, Node<E, T> newNode) {
+    private T setNode(OldNode<E, T> oldNode, OldNode<E, T> newNode) {
         T retVal = oldNode.getValue();
 
         if ((int) newNode.getValue() <= 0) {
@@ -178,11 +178,11 @@ public class Tree<E extends Comparable<E>, T> {
     public Pairs<E, T> remove(int index) { // O(n)
         return this.remove(this.get(index));
     }
-    public Pairs<E, T> remove(Node<E, T> node) { // O(h)
+    public Pairs<E, T> remove(OldNode<E, T> node) { // O(h)
         Pairs<E, T> nodeElement = node.getElement();
-        Node<E, T> parent = node.getParent();
-        Node<E, T> oldLeftChild = node.getLeftChild();
-        Node<E, T> oldRightChild = node.getRightChild();
+        OldNode<E, T> parent = node.getParent();
+        OldNode<E, T> oldLeftChild = node.getLeftChild();
+        OldNode<E, T> oldRightChild = node.getRightChild();
 
         if (node == this.getRoot()) { // node == root
             // treat as rightChild deletion, but moved node becomes root
@@ -192,7 +192,7 @@ public class Tree<E extends Comparable<E>, T> {
                 this.root = null;
             } else if (!oldLeftChild.isLeaf()) {
                 // If root has a leftChild...
-                Node<E, T> curNode = oldLeftChild;
+                OldNode<E, T> curNode = oldLeftChild;
                 while (!curNode.getRightChild().isLeaf()) {
                     curNode = curNode.getRightChild();
                 }
@@ -202,15 +202,15 @@ public class Tree<E extends Comparable<E>, T> {
                     curNode.setRightChild(oldRightChild);
                 } else { // If curNode isn't oldLeftChild...
                     if (!curNode.getLeftChild().isLeaf()) {
-                        Node<E, T> toMove = curNode.getLeftChild();
-                        Node<E, T> receiver = curNode.getParent().getRightChild();
+                        OldNode<E, T> toMove = curNode.getLeftChild();
+                        OldNode<E, T> receiver = curNode.getParent().getRightChild();
                         
                         receiver.setLeftChild(toMove);
-                        toMove.getParent().setLeftChild(new Node<>(null, toMove.getParent()));
+                        toMove.getParent().setLeftChild(new OldNode<E, T>(null, toMove.getParent()));
                         toMove.setParent(receiver);
                     } // no else block
                         this.root = curNode;
-                        curNode.getParent().setRightChild(new Node<>(null, curNode.getParent()));
+                        curNode.getParent().setRightChild(new OldNode<E, T>(null, curNode.getParent()));
                         curNode.setParent(null);
                         oldLeftChild.setParent(curNode);
                         oldRightChild.setParent(curNode);
@@ -225,12 +225,12 @@ public class Tree<E extends Comparable<E>, T> {
             // If node is a rightChild of parent...
             if (oldLeftChild.isLeaf() && oldRightChild.isLeaf()) {
                 // If node has only leaves...
-                parent.setRightChild(new Node<E, T>(null, parent));
+                parent.setRightChild(new OldNode<E, T>(null, parent));
 
             } else if (!oldLeftChild.isLeaf()) {
                 // If node has a leftChild,
                 // oldLeftChild takes the place of node...
-                Node<E, T> curNode = node;
+                OldNode<E, T> curNode = node;
                 while (!curNode.getLeftChild().isLeaf()) {
                     curNode = curNode.getLeftChild();
                 }
@@ -243,23 +243,23 @@ public class Tree<E extends Comparable<E>, T> {
                         curNode.setLeftChild(oldLeftChild);
                         oldLeftChild.setParent(curNode);
                     } else {
-                        curNode.setLeftChild(new Node<E, T>(null, curNode, null, null));
+                        curNode.setLeftChild(new OldNode<E, T>(null, curNode, null, null));
                     }
                     
                     curNode.setRightChild(oldRightChild);
                     oldRightChild.setParent(curNode);
                 } else {
                     // find curNode's right child's new parent
-                    Node<E, T> receiver = curNode.getParent().getRightChild();
+                    OldNode<E, T> receiver = curNode.getParent().getRightChild();
                     while (!receiver.getLeftChild().isLeaf()) {
                         receiver = receiver.getLeftChild();
                     }
-                    Node<E, T> moving = curNode.getRightChild();
+                    OldNode<E, T> moving = curNode.getRightChild();
                     receiver.setLeftChild(moving);
                     moving.setParent(receiver);
                 }
             } else { // If node has no leftChild
-                Node<E, T> receiver = parent.getRightChild();
+                OldNode<E, T> receiver = parent.getRightChild();
                 while (!receiver.getLeftChild().isLeaf()) {
                     receiver = receiver.getLeftChild();
                 }
@@ -270,10 +270,10 @@ public class Tree<E extends Comparable<E>, T> {
             // If node is a leftChild of parent...
             if (oldLeftChild.isLeaf() && oldRightChild.isLeaf()) {
                 // If node has only leaves...
-                parent.setLeftChild(new Node<E, T>(null, parent));
+                parent.setLeftChild(new OldNode<E, T>(null, parent));
             } else if (!oldRightChild.isLeaf()) {
                 // If node has a rightChild...
-                Node<E, T> curNode = node;
+                OldNode<E, T> curNode = node;
                 while(!curNode.getRightChild().isLeaf()) {
                     curNode = curNode.getRightChild();
                 }
@@ -283,22 +283,22 @@ public class Tree<E extends Comparable<E>, T> {
                         curNode.setRightChild(oldRightChild);
                         oldRightChild.setParent(curNode);
                     } else {
-                        curNode.setRightChild(new Node<E, T>(null, curNode, null, null));
+                        curNode.setRightChild(new OldNode<E, T>(null, curNode, null, null));
                     }
 
                     curNode.setLeftChild(oldLeftChild);
                     oldLeftChild.setParent(curNode);
                 } else {
-                    Node<E, T> receiver = curNode.getParent().getLeftChild();
+                    OldNode<E, T> receiver = curNode.getParent().getLeftChild();
                     while(!receiver.getRightChild().isLeaf()) {
                         receiver = receiver.getRightChild();
                     }
-                    Node<E, T> moving = curNode.getLeftChild();
+                    OldNode<E, T> moving = curNode.getLeftChild();
                     receiver.setRightChild(moving);
                     moving.setParent(receiver);
                 }
             } else {
-                Node<E, T> receiver = parent.getLeftChild();
+                OldNode<E, T> receiver = parent.getLeftChild();
                 while (!receiver.getRightChild().isLeaf()) {
                     receiver = receiver.getRightChild();
                 }
@@ -321,19 +321,19 @@ public class Tree<E extends Comparable<E>, T> {
     // Query Methods
     public int size() { return this.size; }
     public boolean isEmpty() { return this.size == 0; }
-    private Node<E, T> getRoot() { return this.root; }
-    private Node<E, T> get(int index) { // O(n)
-        ArrayList<Node<E, T>> flatTree = iterable(root);
+    private OldNode<E, T> getRoot() { return this.root; }
+    private OldNode<E, T> get(int index) { // O(n)
+        ArrayList<OldNode<E, T>> flatTree = iterable(root);
 
         return flatTree.get(index);
     }
-    public int indexOf(Node<E, T> node) { // O(n)
-        ArrayList<Node<E, T>> flatTree = iterable(root);
+    public int indexOf(OldNode<E, T> node) { // O(n)
+        ArrayList<OldNode<E, T>> flatTree = iterable(root);
 
         return flatTree.indexOf(node);
     }
-    public Node<E, T> search(E key) { // O(h)
-        Node<E, T> curNode = this.root;
+    public OldNode<E, T> search(E key) { // O(h)
+        OldNode<E, T> curNode = this.root;
 
         while (!curNode.isLeaf()) {
             if (curNode.compareTo(key) == 0) {
@@ -347,7 +347,7 @@ public class Tree<E extends Comparable<E>, T> {
         return null;
     }
     public boolean contains(E element) { // O(h)
-        Node<E, T> curNode = this.root;
+        OldNode<E, T> curNode = this.root;
 
         while (!curNode.isLeaf()) {
             if (curNode.compareTo(element) == 0) {
@@ -364,18 +364,18 @@ public class Tree<E extends Comparable<E>, T> {
     // Iteration
     private ArrayList<Pairs<E, T>> iterator() {
         ArrayList<Pairs<E, T>> retArr = new ArrayList<Pairs<E, T>>();
-        for (Node<E, T> node : iterable(this.getRoot())) {
+        for (OldNode<E, T> node : iterable(this.getRoot())) {
             retArr.add(node.getElement());
         }
         return retArr;
     }
-    private ArrayList<Node<E, T>> iterable(Node<E, T> node) { // in-order traversal
-        Node<E, T> leftChild = node.getLeftChild();
-        Node<E, T> rightChild = node.getRightChild();
-        ArrayList<Node<E, T>> nodeList = new ArrayList<Node<E, T>>();
+    private ArrayList<OldNode<E, T>> iterable(OldNode<E, T> node) { // in-order traversal
+        OldNode<E, T> leftChild = node.getLeftChild();
+        OldNode<E, T> rightChild = node.getRightChild();
+        ArrayList<OldNode<E, T>> nodeList = new ArrayList<OldNode<E, T>>();
 
         if (!leftChild.isLeaf()) {
-            for (Node<E, T> element : iterable(leftChild)) {
+            for (OldNode<E, T> element : iterable(leftChild)) {
                 nodeList.add(element);
             }
         }
@@ -383,7 +383,7 @@ public class Tree<E extends Comparable<E>, T> {
         nodeList.add(node);
 
         if (!rightChild.isLeaf()) {
-            for (Node<E, T> element : iterable(rightChild)) {
+            for (OldNode<E, T> element : iterable(rightChild)) {
                 nodeList.add(element);
             }
         }

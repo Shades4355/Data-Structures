@@ -1,6 +1,6 @@
-// File name:   Node.java
+// File name:   OldNode.java
 // Written by:  Shades Meyers
-// Description: A Node with Pairs as its element
+// Description: A OldNode with Pairs as its element
 // Challenges:  None
 // Time Spent:  55 minutes
 //
@@ -16,49 +16,49 @@
 
 import java.util.ArrayList;
 
-public class Node<E extends Comparable<E>, T> implements Comparable<Pairs<E, T>> {
+public class OldNode<E extends Comparable<E>, T> implements Comparable<Pairs<E, T>> {
     // Variables
     private Pairs<E, T> element;
-    private Node<E, T> parent, leftChild, rightChild;
+    private OldNode<E, T> parent, leftChild, rightChild;
 
     // Constructors
-    Node(Pairs<E, T> element, Node<E, T> parent, Node<E, T> leftChild, Node<E, T> rightChild) {
+    OldNode(Pairs<E, T> element, OldNode<E, T> parent, OldNode<E, T> leftChild, OldNode<E, T> rightChild) {
         this.element = element;
         this.parent = parent;
         this.leftChild = leftChild;
         this.rightChild = rightChild;
     }
-    Node(Pairs<E, T> element, Node<E, T> parent) {
+    OldNode(Pairs<E, T> element, OldNode<E, T> parent) {
         this.element = element;
         this.parent = parent;
-        this.leftChild = new Node<E, T>(null, this, null, null);
-        this.rightChild = new Node<E, T>(null, this, null, null);
+        this.leftChild = new OldNode<E, T>(null, this, null, null);
+        this.rightChild = new OldNode<E, T>(null, this, null, null);
     }
 
     // Methods
     // Accessors & Mutators
         // Parent
-    public Node<E, T> getParent() {
+    public OldNode<E, T> getParent() {
         return this.parent;
     }
-    public void setParent(Node<E, T> newParent) {
+    public void setParent(OldNode<E, T> newParent) {
         this.parent = newParent;
     }
         // Children
-    public Node<E, T> getLeftChild() {
+    public OldNode<E, T> getLeftChild() {
         return this.leftChild;
     }
-    public void setLeftChild(Node<E, T> newChild) {
+    public void setLeftChild(OldNode<E, T> newChild) {
         this.leftChild = newChild;
     }
-    public Node<E, T> getRightChild() {
+    public OldNode<E, T> getRightChild() {
         return this.rightChild;
     }
-    public void setRightChild(Node<E, T> newChild) {
+    public void setRightChild(OldNode<E, T> newChild) {
         this.rightChild = newChild;
     }
-    public ArrayList<Node<E, T>> getChildren() {
-        ArrayList<Node<E, T>> childList = new ArrayList<Node<E, T>>();
+    public ArrayList<OldNode<E, T>> getChildren() {
+        ArrayList<OldNode<E, T>> childList = new ArrayList<OldNode<E, T>>();
         childList.add(this.leftChild);
         childList.add(this.rightChild);
 
@@ -92,8 +92,8 @@ public class Node<E extends Comparable<E>, T> implements Comparable<Pairs<E, T>>
     public int compareTo(Pairs<E, T> element) {
         return this.getElement().compareTo(element);
     }
-    public int compareTo(Node<E, T> node2) {
-        return this.compareTo(node2.getElement());
+    public int compareTo(OldNode<E, T> OldNode2) {
+        return this.compareTo(OldNode2.getElement());
     }
     public int compareTo(E key) {
         return this.getElement().compareTo(key);
@@ -106,4 +106,4 @@ public class Node<E extends Comparable<E>, T> implements Comparable<Pairs<E, T>>
         return new String(new StringBuilder().append(this.element));
     }
 
-} // end Node
+} // end OldNode
