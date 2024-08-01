@@ -8,6 +8,8 @@
 // Date:        By:     Action:
 // -------------------------------
 // 2024-July-28 SM      File created
+//                      Inspiration taken from my previous work
+//                          https://github.com/Shades4355/D20_Combat
 // 2024-July-29 SM      Bug squashing
 //                      Added dropItems() method
 // 2024-July-31 SM      Minor print formatting tweaks

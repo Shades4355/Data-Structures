@@ -2,7 +2,7 @@
 // Written by:  Shades Meyers
 // Description: A node for a Skip List
 // Challenges:  
-// Time Spent:  13 minutes + ( - )
+// Time Spent:  14 minutes
 //
 // Revision history:
 // Date:        By:     Action:

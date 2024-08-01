@@ -2,7 +2,7 @@
 // Written by:  Shades Meyers
 // Description: A Linked List Skip List Map
 // Challenges:  
-// Time Spent:  1 h 34 minutes + (18:25 - )
+// Time Spent:  2 h 28 minutes
 //
 // Revision history:
 // Date:        By:     Action:
