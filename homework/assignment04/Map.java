@@ -1,49 +1,76 @@
 // File name:   Map.java
 // Written by:  Shades Meyers
-// Description: A Linked List Map
+// Description: A Linked Skip List Map
 // Challenges:  
-// Time Spent:  1 h 29 minutes
+// Time Spent:  5 h 15 minutes
+
 //
 // Revision history:
 // Date:        By:     Action:
 // -------------------------------
 // 2024-July-31 SM      File created
+// 2024-Aug-01  SM      Converted to a Skip List
+
 
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 import java.util.function.Consumer;
 
 public class Map <E extends Comparable<E>, T> {
     // Variables
-    private int size;
-    Node<E, T> header, trailer;
+    private int size, height;
+    private Node<E, T> start, end, header, trailer;
 
     // Constructors
     Map() {
         this.header = new Node<E, T>();
         this.trailer = new Node<E, T>(null, this.header, null);
         this.header.setNextNode(this.trailer);
+
+        this.start = this.header;
+        this.end = this.trailer;
+        
+        this.height = 0;
+        this.addNewList();
+        
         this.size = 0;
     }
     Map(Pairs<E, T> element) {
         this.header = new Node<E, T>();
         this.trailer = new Node<E, T>();
+      
+        this.start = this.header;
+        this.end = this.trailer;
+
+        this.header.setNextNode(trailer);
+        this.trailer.setPrevNode(header);
+        
+        this.height = 0;
+        this.addNewList();
+        
         Node<E, T> newNode = new Node<>(element, header, trailer);
-        this.header.setNextNode(newNode);
-        this.trailer.setPrevNode(newNode);
-        this.size = 1;
+        this.size = 0;
+        this.add(newNode); // add() increments size to 1
     }
     Map(E key, T value) {
-        Node<E, T> newNode = new Node<>(new Pairs<E,T>(key, value));
         this.header = new Node<E, T>();
         this.trailer = new Node<E, T>();
-        this.header.setNextNode(newNode);
-        this.trailer.setPrevNode(newNode);
-        this.size = 1;
+        this.header.setNextNode(this.trailer);
+        this.trailer.setPrevNode(this.header);
+        
+        this.height = 0;
+        this.addNewList();
+        
+        this.size = 0;
+        this.add(key, value);
     }
 
     // Methods
+    // Accessors & Mutators
+    public Node<E, T> getStart() { return this.start; }
+
     // Insertion Methods
     public boolean add(E key, T value) {
         Pairs<E, T> newElement = new Pairs<E, T>(key, value);
@@ -55,45 +82,89 @@ public class Map <E extends Comparable<E>, T> {
 
         return add(newNode);
     }
-    public boolean add(Node<E, T> node) { // O(n)
-        if ((int) node.getValue() <= 0) {
-            this.remove(node.getKey());
 
+    public boolean add(Node<E, T> node) { // O(log n)
+        Node<E, T> parentNode = search(node.getKey()); // O(log n)
+
+        if (parentNode.getElement() != null && parentNode.compareTo(node) == 0) {
+            if ((int) node.getValue() <= 0) {
+                this.remove(node.getKey());
+
+                return false;
+            }
+
+            this.set(parentNode, node.getValue());
+          
             return false;
         }
 
         if (this.isEmpty()) {
-            this.addBetween(node, this.header, this.trailer);
+            this.addBetween(node, this.header, this.trailer, 0);
+
             this.size++;
 
             return true;
         }
 
-        Node<E, T> childNode = this.header.getNextNode();
-        while (childNode != this.trailer && childNode.compareTo(node) < 0) {
-            childNode = childNode.next();
-        }
-
-        if (childNode != this.trailer && childNode.compareTo(node) == 0) {
-            this.set(node.getKey(), node.getValue());
-
-            return false;
-        }
-        this.addBetween(node, childNode.getPrevNode(), childNode);
+        this.addBetween(node, parentNode, parentNode.next(), 0);
         this.size++;
 
         return true;
     }
-    public void addBetween(Pairs<E, T> element, Node<E, T> before, Node<E, T> after) {
-        Node<E, T> newNode = new Node<E, T>(element);
-        this.addBetween(newNode, before, after);
+    public void addAbove(Node<E, T> node, int newHeight) {
+        if (newHeight == this.height) { // make sure no tower enters the top level
+            this.addNewList();
+        }
+
+        Node<E, T> newNode = new Node<E, T>(new Pairs<E, T>(node.getKey(), null));
+        newNode.setBelowNode(node);
+        node.setAboveNode(newNode);
+
+        Node<E, T> newBefore = node.getPrevNode();
+        while (newBefore.getElement() != null && newBefore.getAboveNode() == null) {
+            // newBefore.getElement() == null means we've reached the left sentinel
+            newBefore = newBefore.getPrevNode();
+        }
+
+        newBefore = newBefore.getAboveNode();
+
+        if (newBefore == null) {
+            throw new ArrayIndexOutOfBoundsException("Node is missing");
+        }
+
+        this.addBetween(newNode, newBefore, newBefore.next(), newHeight);
     }
-    public void addBetween(Node<E, T> newNode, Node<E, T> before, Node<E, T> after) { // O(1)
+    public void addNewList() {
+        Node<E, T> newStart = new Node<>(this.start.getElement(), null, null);
+        Node<E, T> newEnd = new Node<>(this.end.getElement(), newStart, null);
+
+        newStart.setNextNode(newEnd);
+        newStart.setBelowNode(this.start);
+        this.start.setAboveNode(newStart);
+        this.start = newStart;
+
+        newEnd.setBelowNode(this.end);
+        this.end.setAboveNode(newEnd);
+        this.end = newEnd;
+
+        this.height++;
+    }
+    public void addBetween(Pairs<E, T> element, Node<E, T> before, Node<E, T> after, int curHeight) {
+        Node<E, T> newNode = new Node<E, T>(element);
+        this.addBetween(newNode, before, after, curHeight);
+    }
+    public void addBetween(Node<E, T> newNode, Node<E, T> before, Node<E, T> after, int curHeight) {
+
         before.setNextNode(newNode);
         after.setPrevNode(newNode);
 
         newNode.setPrevNode(before);
         newNode.setNextNode(after);
+
+        boolean coin = new Random().nextBoolean();
+        if (coin) {
+            this.addAbove(newNode, curHeight + 1);
+        }
     }
 
     // Removal Methods
@@ -106,41 +177,84 @@ public class Map <E extends Comparable<E>, T> {
         node.getNextNode().setPrevNode(node.getPrevNode());
         
         this.size--;
+
+        if (node.getAboveNode() != null) {
+            this.removeAbove(node.getAboveNode());
+            node.setAboveNode(null);
+        }
+
+        // Garbage collection help
+        node.setPrevNode(null);
+        node.setNextNode(null);
+
         return node.getElement();
     }
-    public Pairs<E, T> remove(E key) { // O(n)
-        Node<E, T> node = this.search(key);
-        
-        if (node == null) {
+    public Pairs<E, T> remove(E key) { // O(log n)
+        if (this.isEmpty()) { // if the list is empty...
             return null;
         }
 
-        return remove(node);
+        Node<E, T> node = this.search(key);
+
+        if (node.compareTo(key) == 0) { // If node is found; remove
+            return remove(node);
+        }
+
+        return null; // return null is node is not found
+    }
+    public void removeAbove(Node<E, T> node) { // O(h)
+        node.getPrevNode().setNextNode(node.next());
+        node.next().setPrevNode(node.getPrevNode());
+        
+        node.setBelowNode(null);
+        node.setPrevNode(null);
+        node.setElement(null);
+        node.setElement(null);
+        
+        if (node.getAboveNode() != null) {
+            this.removeAbove(node.getAboveNode());
+        }
+        
+        node.setAboveNode(null);
     }
 
-    public T set(E key, T value) { // O(n)
+    public T set(E key, T value) { // O(log n)
         Node<E, T> node = this.search(key);
-        if (node == null) {
-            return null;
+
+        if (node.compareTo(key) == 0) {
+            T retVal = node.getValue();
+            node.setValue(value);
+
+            return retVal;
         }
 
+        return null;
+    }
+    public T set(Node<E, T> node, T value) { // O(1)
         T retVal = node.getValue();
         node.setValue(value);
-        
+
         return retVal;
     }
-    
+
     // Search Methods
-    public boolean contains(E key) { return search(key) != null; }
-    public Node<E, T> search(E key) { // TODO: make O(log n) ?
-        Node<E, T> curNode = this.header;
-        for (int i = 0; i < this.size; i++) {
-            curNode = curNode.getNextNode();
-            if (key.compareTo(curNode.getElement().getKey()) == 0) {
-                return curNode;
-            }
+    public boolean contains(E key) { // O(log n)
+        Node<E, T> found = search(key);
+
+        return found != null
+        && found.getElement() != null
+        && found.compareTo(key) == 0; 
+    } 
+    public Node<E, T> search(E key) { // O(log n)
+        Node<E, T> curNode = this.start;
+        while (curNode.getBelowNode() != null) {
+            curNode = curNode.getBelowNode();
+            while (curNode.next().getElement() != null &&
+                curNode.next().compareTo(key) <= 0) {
+                    curNode = curNode.next();
+                }
         }
-        return null;
+        return curNode;
     }
     public Pairs<E, T> get(int index) { // O(n)
         Node<E, T> currentNode = this.header;
@@ -182,12 +296,12 @@ public class Map <E extends Comparable<E>, T> {
         // ex: list.forEach((n) -> System.out.println(n));
         try{
             Objects.requireNonNull(action);
-            Node<E, T> currentNode = this.header.getNextNode();
+            Node<E, T> currentNode = this.header.next();
 
             if (this.size > 0) {
                 while (currentNode.hasNext()) {
                     action.accept(currentNode.getElement());
-                    currentNode = currentNode.getNextNode();
+                    currentNode = currentNode.next();
                 }
             } else {
                 throw new ArrayIndexOutOfBoundsException("List is empty");
@@ -201,14 +315,14 @@ public class Map <E extends Comparable<E>, T> {
     @Override
     public String toString() {
         StringBuilder string = new StringBuilder();
-        Node<E, T> curNode = this.header.getNextNode();
+        Node<E, T> curNode = this.header.next();
         string.append("{");
         while (curNode.hasNext()) {
             string.append(curNode);
-            if (curNode.getNextNode() != this.trailer) {
+            if (curNode.next() != this.trailer) {
                 string.append(", ");
             }
-            curNode = curNode.getNextNode();
+            curNode = curNode.next();
         }
         string.append("}");
 

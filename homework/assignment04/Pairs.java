@@ -2,13 +2,15 @@
 // Written by:  Shades Meyers
 // Description: A Pairs class for storing key-value pairs
 // Challenges:  Implementing compareTo() for generic E
-// Time Spent:  2 h 08 minutes
+// Time Spent:  2 h 18 minutes
 //
 // Revision history:
 // Date:         By:    Action:
 // -------------------------------
 // 2024-July-24 SM      File created
 // 2024-July-26 SM      Worked on compareTo with SI
+// 2024-Aug-01  SM      Started converting to Skip List Node
+//                      Left Pairs as is
 
 
 public class Pairs<E extends Comparable<E>, T> implements Comparable<E> {
@@ -39,14 +41,7 @@ public class Pairs<E extends Comparable<E>, T> implements Comparable<E> {
         this.value = value;
     }
 
-    // Overrides
-    @Override
-    public String toString() {
-        StringBuilder string = new StringBuilder();
-        string.append("{" + this.key + ": " + this.value + "}");
-
-        return new String(string);
-    }
+    // Comparisons
     public boolean equals(Pairs<E, T> val2) {
         return this.getKey() == val2.getKey() && this.getValue() == val2.getValue();
     }
@@ -57,5 +52,14 @@ public class Pairs<E extends Comparable<E>, T> implements Comparable<E> {
         E key1 = this.getKey();
 
         return key1.compareTo(key2);
+    }
+
+    // To String
+    @Override
+    public String toString() {
+        StringBuilder string = new StringBuilder();
+        string.append("{" + this.key + ": " + this.value + "}");
+
+        return new String(string);
     }
 } // end Pairs
