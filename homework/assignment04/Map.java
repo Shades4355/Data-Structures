@@ -3,12 +3,14 @@
 // Description: A Linked Skip List Map
 // Challenges:  
 // Time Spent:  5 h 15 minutes
+
 //
 // Revision history:
 // Date:        By:     Action:
 // -------------------------------
 // 2024-July-31 SM      File created
 // 2024-Aug-01  SM      Converted to a Skip List
+
 
 
 import java.util.ArrayList;
@@ -26,7 +28,7 @@ public class Map <E extends Comparable<E>, T> {
         this.header = new Node<E, T>();
         this.trailer = new Node<E, T>(null, this.header, null);
         this.header.setNextNode(this.trailer);
-        
+
         this.start = this.header;
         this.end = this.trailer;
         
@@ -38,6 +40,7 @@ public class Map <E extends Comparable<E>, T> {
     Map(Pairs<E, T> element) {
         this.header = new Node<E, T>();
         this.trailer = new Node<E, T>();
+      
         this.start = this.header;
         this.end = this.trailer;
 
@@ -79,6 +82,7 @@ public class Map <E extends Comparable<E>, T> {
 
         return add(newNode);
     }
+
     public boolean add(Node<E, T> node) { // O(log n)
         Node<E, T> parentNode = search(node.getKey()); // O(log n)
 
@@ -90,11 +94,13 @@ public class Map <E extends Comparable<E>, T> {
             }
 
             this.set(parentNode, node.getValue());
+          
             return false;
         }
 
         if (this.isEmpty()) {
             this.addBetween(node, this.header, this.trailer, 0);
+
             this.size++;
 
             return true;
@@ -148,6 +154,7 @@ public class Map <E extends Comparable<E>, T> {
         this.addBetween(newNode, before, after, curHeight);
     }
     public void addBetween(Node<E, T> newNode, Node<E, T> before, Node<E, T> after, int curHeight) {
+
         before.setNextNode(newNode);
         after.setPrevNode(newNode);
 
