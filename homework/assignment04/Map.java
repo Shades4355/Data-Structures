@@ -1,14 +1,14 @@
 // File name:   Map.java
 // Written by:  Shades Meyers
-// Description: A Linked List Skip List Map
+// Description: A Linked Skip List Map
 // Challenges:  
-// Time Spent:  2 h 48 minutes
+// Time Spent:  5 h 15 minutes
 //
 // Revision history:
 // Date:        By:     Action:
 // -------------------------------
 // 2024-July-31 SM      File created
-// 2024-Aug-01  SM      Started converting to Skip List
+// 2024-Aug-01  SM      Converted to a Skip List
 
 
 import java.util.ArrayList;
@@ -52,14 +52,15 @@ public class Map <E extends Comparable<E>, T> {
         this.add(newNode); // add() increments size to 1
     }
     Map(E key, T value) {
-        Node<E, T> newNode = new Node<>(new Pairs<E,T>(key, value));
         this.header = new Node<E, T>();
         this.trailer = new Node<E, T>();
-        this.header.setNextNode(newNode);
-        this.trailer.setPrevNode(newNode);
-        this.size = 1;
+        this.header.setNextNode(this.trailer);
+        this.trailer.setPrevNode(this.header);
+        
         this.height = 0;
         this.addNewList();
+        
+        this.size = 0;
         this.add(key, value);
     }
 
@@ -79,9 +80,16 @@ public class Map <E extends Comparable<E>, T> {
         return add(newNode);
     }
     public boolean add(Node<E, T> node) { // O(log n)
-        if ((int) node.getValue() <= 0) {
-            this.remove(node.getKey());
+        Node<E, T> parentNode = search(node.getKey()); // O(log n)
 
+        if (parentNode.getElement() != null && parentNode.compareTo(node) == 0) {
+            if ((int) node.getValue() <= 0) {
+                this.remove(node.getKey());
+
+                return false;
+            }
+
+            this.set(parentNode, node.getValue());
             return false;
         }
 
@@ -92,32 +100,32 @@ public class Map <E extends Comparable<E>, T> {
             return true;
         }
 
-        Node<E, T> parentNode = search(node.getKey()); // O(log n)
-        if (parentNode.getElement() != null && parentNode.compareTo(node) == 0) {
-            this.set(parentNode, node.getValue());
-            return false;
-        }
-
         this.addBetween(node, parentNode, parentNode.next(), 0);
         this.size++;
 
         return true;
     }
     public void addAbove(Node<E, T> node, int newHeight) {
-        while (newHeight >= this.height) { // make sure no tower enters the top level
+        if (newHeight == this.height) { // make sure no tower enters the top level
             this.addNewList();
         }
 
-        Node<E, T> newNode = new Node<>(new Pairs<>(node.getKey(), null));
+        Node<E, T> newNode = new Node<E, T>(new Pairs<E, T>(node.getKey(), null));
         newNode.setBelowNode(node);
         node.setAboveNode(newNode);
 
         Node<E, T> newBefore = node.getPrevNode();
         while (newBefore.getElement() != null && newBefore.getAboveNode() == null) {
-            // newBefore.getElement() == null means we've reached the left Sentinel
+            // newBefore.getElement() == null means we've reached the left sentinel
             newBefore = newBefore.getPrevNode();
         }
-        
+
+        newBefore = newBefore.getAboveNode();
+
+        if (newBefore == null) {
+            throw new ArrayIndexOutOfBoundsException("Node is missing");
+        }
+
         this.addBetween(newNode, newBefore, newBefore.next(), newHeight);
     }
     public void addNewList() {
@@ -205,14 +213,15 @@ public class Map <E extends Comparable<E>, T> {
 
     public T set(E key, T value) { // O(log n)
         Node<E, T> node = this.search(key);
-        if (node == null) {
-            return null;
+
+        if (node.compareTo(key) == 0) {
+            T retVal = node.getValue();
+            node.setValue(value);
+
+            return retVal;
         }
 
-        T retVal = node.getValue();
-        node.setValue(value);
-        
-        return retVal;
+        return null;
     }
     public T set(Node<E, T> node, T value) { // O(1)
         T retVal = node.getValue();
@@ -220,9 +229,15 @@ public class Map <E extends Comparable<E>, T> {
 
         return retVal;
     }
-    
+
     // Search Methods
-    public boolean contains(E key) { return search(key) != null; }
+    public boolean contains(E key) { // O(log n)
+        Node<E, T> found = search(key);
+
+        return found != null
+        && found.getElement() != null
+        && found.compareTo(key) == 0; 
+    } 
     public Node<E, T> search(E key) { // O(log n)
         Node<E, T> curNode = this.start;
         while (curNode.getBelowNode() != null) {

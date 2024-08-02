@@ -53,7 +53,7 @@ public class Pairs<E extends Comparable<E>, T> implements Comparable<E> {
 
         return key1.compareTo(key2);
     }
-    
+
     // To String
     @Override
     public String toString() {

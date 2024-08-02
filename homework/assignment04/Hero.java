@@ -65,11 +65,12 @@ public class Hero extends Entity {
         if (this.xp >= threshold) {
             this.xp -= threshold;
             threshold = 7 + this.level;
+            this.level++;
             this.levelUp(input);
         }
         Start.start(this, input);
     }
-    
+
     // Level up
         // Level up
     public void levelUp(Scanner input) {
