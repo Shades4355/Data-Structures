@@ -66,7 +66,7 @@ public class Node<E extends Comparable<E>, T> implements Comparable<Pairs<E, T>>
     
     // Iterable
     public boolean hasNext() { return this.getNextNode() != null; }
-    public Node<E, T> next() { return this.nextNode; }
+    public Node<E, T> next() { return this.getNextNode(); }
 
     // Comparisons
     @Override

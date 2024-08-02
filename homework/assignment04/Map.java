@@ -2,7 +2,7 @@
 // Written by:  Shades Meyers
 // Description: A Linked List Skip List Map
 // Challenges:  
-// Time Spent:  2 h 28 minutes
+// Time Spent:  2 h 48 minutes
 //
 // Revision history:
 // Date:        By:     Action:
@@ -26,10 +26,13 @@ public class Map <E extends Comparable<E>, T> {
         this.header = new Node<E, T>();
         this.trailer = new Node<E, T>(null, this.header, null);
         this.header.setNextNode(this.trailer);
+        
         this.start = this.header;
         this.end = this.trailer;
+        
         this.height = 0;
         this.addNewList();
+        
         this.size = 0;
     }
     Map(Pairs<E, T> element) {
@@ -40,11 +43,13 @@ public class Map <E extends Comparable<E>, T> {
 
         this.header.setNextNode(trailer);
         this.trailer.setPrevNode(header);
-        this.size = 0;
+        
         this.height = 0;
         this.addNewList();
+        
         Node<E, T> newNode = new Node<>(element, header, trailer);
-        this.add(newNode);
+        this.size = 0;
+        this.add(newNode); // add() increments size to 1
     }
     Map(E key, T value) {
         Node<E, T> newNode = new Node<>(new Pairs<E,T>(key, value));
@@ -109,7 +114,7 @@ public class Map <E extends Comparable<E>, T> {
 
         Node<E, T> newBefore = node.getPrevNode();
         while (newBefore.getElement() != null && newBefore.getAboveNode() == null) {
-            // newBefore.getElement() == null means we've reached the Header
+            // newBefore.getElement() == null means we've reached the left Sentinel
             newBefore = newBefore.getPrevNode();
         }
         
@@ -157,16 +162,45 @@ public class Map <E extends Comparable<E>, T> {
         node.getNextNode().setPrevNode(node.getPrevNode());
         
         this.size--;
+
+        if (node.getAboveNode() != null) {
+            this.removeAbove(node.getAboveNode());
+            node.setAboveNode(null);
+        }
+
+        // Garbage collection help
+        node.setPrevNode(null);
+        node.setNextNode(null);
+
         return node.getElement();
     }
-    public Pairs<E, T> remove(E key) { // O(n)
-        Node<E, T> node = this.search(key);
-        
-        if (node == null) {
+    public Pairs<E, T> remove(E key) { // O(log n)
+        if (this.isEmpty()) { // if the list is empty...
             return null;
         }
 
-        return remove(node);
+        Node<E, T> node = this.search(key);
+
+        if (node.compareTo(key) == 0) { // If node is found; remove
+            return remove(node);
+        }
+
+        return null; // return null is node is not found
+    }
+    public void removeAbove(Node<E, T> node) { // O(h)
+        node.getPrevNode().setNextNode(node.next());
+        node.next().setPrevNode(node.getPrevNode());
+        
+        node.setBelowNode(null);
+        node.setPrevNode(null);
+        node.setElement(null);
+        node.setElement(null);
+        
+        if (node.getAboveNode() != null) {
+            this.removeAbove(node.getAboveNode());
+        }
+        
+        node.setAboveNode(null);
     }
 
     public T set(E key, T value) { // O(log n)
@@ -240,12 +274,12 @@ public class Map <E extends Comparable<E>, T> {
         // ex: list.forEach((n) -> System.out.println(n));
         try{
             Objects.requireNonNull(action);
-            Node<E, T> currentNode = this.header.getNextNode();
+            Node<E, T> currentNode = this.header.next();
 
             if (this.size > 0) {
                 while (currentNode.hasNext()) {
                     action.accept(currentNode.getElement());
-                    currentNode = currentNode.getNextNode();
+                    currentNode = currentNode.next();
                 }
             } else {
                 throw new ArrayIndexOutOfBoundsException("List is empty");
@@ -259,14 +293,14 @@ public class Map <E extends Comparable<E>, T> {
     @Override
     public String toString() {
         StringBuilder string = new StringBuilder();
-        Node<E, T> curNode = this.header.getNextNode();
+        Node<E, T> curNode = this.header.next();
         string.append("{");
         while (curNode.hasNext()) {
             string.append(curNode);
-            if (curNode.getNextNode() != this.trailer) {
+            if (curNode.next() != this.trailer) {
                 string.append(", ");
             }
-            curNode = curNode.getNextNode();
+            curNode = curNode.next();
         }
         string.append("}");
 

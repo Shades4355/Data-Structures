@@ -41,14 +41,7 @@ public class Pairs<E extends Comparable<E>, T> implements Comparable<E> {
         this.value = value;
     }
 
-    // Overrides
-    @Override
-    public String toString() {
-        StringBuilder string = new StringBuilder();
-        string.append("{" + this.key + ": " + this.value + "}");
-
-        return new String(string);
-    }
+    // Comparisons
     public boolean equals(Pairs<E, T> val2) {
         return this.getKey() == val2.getKey() && this.getValue() == val2.getValue();
     }
@@ -59,5 +52,14 @@ public class Pairs<E extends Comparable<E>, T> implements Comparable<E> {
         E key1 = this.getKey();
 
         return key1.compareTo(key2);
+    }
+    
+    // To String
+    @Override
+    public String toString() {
+        StringBuilder string = new StringBuilder();
+        string.append("{" + this.key + ": " + this.value + "}");
+
+        return new String(string);
     }
 } // end Pairs
